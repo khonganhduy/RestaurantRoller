@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "320108428702",
+    "firebase_url": "https://restaurant-roller.firebaseio.com",
+    "project_id": "restaurant-roller",
+    "storage_bucket": "restaurant-roller.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:320108428702:android:2760db02d2dfec55fe2a8f",
+        "android_client_info": {
+          "package_name": "edu.sjsu.android.restaurantroller"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "320108428702-jqrkgbs12b9o9s93sl3lq9m4tchcjavr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.sjsu.android.restaurantroller",
+            "certificate_hash": "2fec2da5e6534343c4629326cb3b9d99a93415e3"
+          }
+        },
+        {
+          "client_id": "320108428702-amholdf6ok0esetrfqidkp15ikean97o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCnVsA1AuV8SLL90qTF776iTG-RG0u2qk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "320108428702-amholdf6ok0esetrfqidkp15ikean97o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

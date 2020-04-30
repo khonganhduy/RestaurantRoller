@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class SavedListsActivityAdapter extends RecyclerView.Adapter<SavedListsActivityAdapter.MyViewHolder>{
+public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAdapter.MyViewHolder>{
 
     private ArrayList<String> mDataset;
     // Provide a reference to the views for each data item
@@ -20,7 +20,7 @@ public class SavedListsActivityAdapter extends RecyclerView.Adapter<SavedListsAc
         // each data item is just a string in this case
         private View view;
         private TextView textview;
-
+        private int weight;
 
         public MyViewHolder(View v) {
             super(v);
@@ -30,7 +30,7 @@ public class SavedListsActivityAdapter extends RecyclerView.Adapter<SavedListsAc
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public SavedListsActivityAdapter(ArrayList<String> myDataset) {
+    public RestaurantListAdapter(ArrayList<String> myDataset) {
         mDataset = myDataset;
     }
 
@@ -41,8 +41,8 @@ public class SavedListsActivityAdapter extends RecyclerView.Adapter<SavedListsAc
 
     // Create new views (invoked by the layout manager)
     @Override
-    public SavedListsActivityAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
-                                                                int viewType) {
+    public RestaurantListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
+                                                                 int viewType) {
         // create a new view
         View v = (View) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.saved_lists_row, parent, false);
