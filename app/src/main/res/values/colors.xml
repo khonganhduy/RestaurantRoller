@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorPrimary">#d32323</color>
+    <color name="colorPrimaryDark">#A80808</color>
+    <color name="colorAccent">#f15c00</color>
+    <color name="yelpRed">#d32323</color>
+    <color name="yelpBlue">#0073bb</color>
+    <color name="yelpBlack">#333333</color>
+    <color name="yelpBackgroundLight">#f5f5f5</color>
+    <color name="yelpBackground">#e6e6e6</color>
+    <color name="yelpBorder">#cccccc</color>
+    <color name="yelpBorderLight">#e6e6e6</color>
+    <color name="yelpTextNormal">#333333</color>
+    <color name="yelpTextMid">#666666</color>
+    <color name="yelpTextGhost">#999999</color>
+    <color name="yelpTextError">#d32323</color>
+    <color name="yelpTextElite">#f15c00</color>
+    <color name="yelpTextLink">#0073bb</color>
+    <color name="yelpTextGreen">#41a700</color>
 </resources>
