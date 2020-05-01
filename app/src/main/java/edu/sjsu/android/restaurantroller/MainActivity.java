@@ -44,7 +44,9 @@ public class MainActivity extends AppCompatActivity {
         addRestaurantBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                AddRestaurantFragment dialogFragment = new AddRestaurantFragment();
+                AppCompatActivity activity = (AppCompatActivity) view.getContext();
+                dialogFragment.show(activity.getSupportFragmentManager(), "editText");
             }
         });
 
