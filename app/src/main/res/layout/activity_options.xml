@@ -6,13 +6,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/yelpBackgroundLight"
-    android:paddingVertical="20sp">
+    android:paddingVertical="20sp"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:clickable="true">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/search_title"
         android:textSize="12pt"
+        android:textColor="@color/yelpBlack"
         android:layout_gravity="center"
         app:layout_constraintBottom_toBottomOf="parent" />
 
@@ -29,22 +33,26 @@
             android:layout_height="wrap_content"
             android:text="@string/search_radius"
             android:textSize="10pt"
+            android:textColor="@color/yelpBlack"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/radiusValue"
-            android:layout_width="30pt"
+            android:layout_width="60pt"
             android:gravity="right"
             android:layout_height="wrap_content"
             android:layout_marginRight="5sp"
             android:background="@null"
-            android:hint="25"
+            android:hint="25 (max)"
+            android:textColor="@color/yelpBlack"
+            android:textColorHint="@color/yelpTextGhost"
             android:inputType="numberDecimal"
-            android:text="5"
             android:textSize="10pt"
+            android:maxLength="4"
             android:cursorVisible="false"
+            android:focusedByDefault="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/unitText"
             app:layout_constraintTop_toTopOf="parent" />
@@ -55,6 +63,7 @@
             android:layout_height="wrap_content"
             android:text="mi"
             android:textSize="10pt"
+            android:textColor="@color/yelpBlack"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -71,13 +80,15 @@
             android:layout_height="wrap_content"
             android:text="@string/search_rating"
             android:textSize="10pt"
+            android:textColor="@color/yelpBlack"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
         <edu.sjsu.android.restaurantroller.ThumbTextSeekBar
+            android:id="@+id/ratingBar"
             android:layout_width="200sp"
             android:layout_height="wrap_content"
-            android:max="10"
+            android:max="9"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -94,12 +105,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/search_price"
+            android:textColor="@color/yelpBlack"
             android:textSize="10pt"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Spinner
+            android:id="@+id/priceMin"
             android:layout_width="80sp"
             android:layout_height="wrap_content"
             android:background="@null"

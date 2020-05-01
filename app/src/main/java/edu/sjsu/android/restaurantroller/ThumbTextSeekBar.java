@@ -1,7 +1,10 @@
 package edu.sjsu.android.restaurantroller;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -17,19 +20,25 @@ public class ThumbTextSeekBar extends LinearLayout {
 
     public ThumbTextSeekBar(Context context) {
         super(context);
-        init();
+        init(null);
     }
 
     public ThumbTextSeekBar(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(attrs);
     }
 
-    private void init() {
+    private void init(AttributeSet attrs) {
         LayoutInflater.from(getContext()).inflate(R.layout.view_thumb_text_seekbar, this);
         setOrientation(LinearLayout.VERTICAL);
         tvThumb = (ThumbTextView) findViewById(R.id.tvThumb);
         seekBar = (SeekBar) findViewById(R.id.sbProgress);
+        if(attrs != null){
+            String seekMax = attrs.getAttributeValue("http://schemas.android.com/apk/res/android", "max");
+            if(seekMax != null)
+                seekBar.setMax(Integer.parseInt(seekMax));
+        }
+        tvThumb.attachToSeekBar(seekBar);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {

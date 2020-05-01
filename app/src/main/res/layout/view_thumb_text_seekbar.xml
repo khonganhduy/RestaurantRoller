@@ -8,8 +8,8 @@
         android:id="@+id/tvThumb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="4dp"
-        android:visibility="gone" />
+        android:paddingVertical="2dp"
+        android:visibility="visible" />
     <SeekBar
         android:id="@+id/sbProgress"
         android:layout_width="match_parent"
@@ -17,6 +17,7 @@
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
         android:layout_marginTop="5dp"
+        android:progressTint="@color/yelpRed"
+        android:thumbTint="@color/yelpRed"
         android:minHeight="20dp" />
-
 </merge>
