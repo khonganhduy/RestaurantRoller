@@ -16,7 +16,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TabHost;
+import android.widget.Toast;
 
+import com.yelp.fusion.client.connection.YelpFusionApiFactory;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -102,6 +106,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}});
 
-            new YelpHelper(this);
+            YelpFusionApiFactory a = new YelpFusionApiFactory();
+        try {
+            a.createAPI("Ni4mFTF0sjaHGiiHtdkR7QkEgLOgO7sqoCBjzVmIEs-C0gLXpUcip73U7f5Mm8MspHlU6frco8WAbEJa7PalRDKt2Csi-3GHvi6S8gNrAxR-MMQwe5NMFKzSdQiLXnYx");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+            /*try{
+                new YelpHelper(this);
+            } catch (IOException e){
+                Toast toast = Toast.makeText(this, "Connection to Yelp services failed.", Toast.LENGTH_LONG);
+            }*/
+
     }
 }

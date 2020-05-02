@@ -20,16 +20,12 @@ import retrofit2.Call;
 public class YelpHelper {
     private static YelpFusionApi api = null;
 
-    protected YelpHelper(Context c)
+    protected YelpHelper(Context c) throws IOException
     {
         if(api == null) {
             Resources r = c.getResources();
             String yelp_key = r.getString(R.string.yelp_key);
-            try {
                 api = new YelpFusionApiFactory().createAPI(yelp_key);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
     private void keyTest(){
