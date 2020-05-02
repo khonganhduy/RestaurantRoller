@@ -21,6 +21,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -32,10 +37,12 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-
-    api 'com.yelp.clientlib:yelp-android:3.0.0'
     annotationProcessor 'com.google.auto.value:auto-value:1.2'
 
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    compile(name: 'yelp-fusion-client-0.1.5', ext:'aar')
+    implementation 'com.squareup.retrofit2:retrofit:2.8.1'
+    compile 'com.squareup.retrofit2:converter-jackson:2.8.1'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.0'
     //implementation 'com.google.firebase:firebase-analytics:17.3.0'
 }

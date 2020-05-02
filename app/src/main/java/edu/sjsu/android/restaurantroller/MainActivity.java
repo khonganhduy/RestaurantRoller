@@ -5,16 +5,22 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TabHost;
+import android.widget.Toast;
 
+import com.yelp.fusion.client.connection.YelpFusionApiFactory;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -79,6 +85,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View view, boolean b) {
                 searchRadiusValue.setCursorVisible(b);
+                if(!b){
+                    InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
             }
         });
         ratingSeekBar = (ThumbTextSeekBar) findViewById(R.id.ratingBar);
@@ -95,5 +105,18 @@ public class MainActivity extends AppCompatActivity {
             public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}});
+
+            YelpFusionApiFactory a = new YelpFusionApiFactory();
+        try {
+            a.createAPI("Ni4mFTF0sjaHGiiHtdkR7QkEgLOgO7sqoCBjzVmIEs-C0gLXpUcip73U7f5Mm8MspHlU6frco8WAbEJa7PalRDKt2Csi-3GHvi6S8gNrAxR-MMQwe5NMFKzSdQiLXnYx");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+            /*try{
+                new YelpHelper(this);
+            } catch (IOException e){
+                Toast toast = Toast.makeText(this, "Connection to Yelp services failed.", Toast.LENGTH_LONG);
+            }*/
+
     }
 }
