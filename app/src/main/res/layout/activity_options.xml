@@ -9,7 +9,8 @@
     android:paddingVertical="20sp"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:clickable="true">
+    android:clickable="true"
+    android:windowSoftInputMode="stateAlwaysHidden">
 
     <TextView
         android:layout_width="wrap_content"

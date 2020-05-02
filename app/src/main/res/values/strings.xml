@@ -1,4 +1,6 @@
 <resources>
+    <string name="yelp_token">tsvi1lR7IZ_X6ilZXVbtPQ</string>
+    <string name="yelp_key">Ni4mFTF0sjaHGiiHtdkR7QkEgLOgO7sqoCBjzVmIEs-C0gLXpUcip73U7f5Mm8MspHlU6frco8WAbEJa7PalRDKt2Csi-3GHvi6S8gNrAxR-MMQwe5NMFKzSdQiLXnYx</string>
     <string name="app_name">Restaurant Roller</string>
     <string name="search_title">Search Settings</string>
     <string name="search_radius">Maximum Distance</string>
