@@ -5,9 +5,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.SearchManager;
-import android.content.Intent;
-import android.media.Image;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.text.Editable;
@@ -15,10 +14,15 @@ import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.TabHost;
+import android.widget.Toast;
 
+import com.yelp.fusion.client.connection.YelpFusionApiFactory;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -36,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> restaurantList;
     // Tab 2 variables
     private EditText searchRadiusValue;
-
+    private ThumbTextSeekBar ratingSeekBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,10 +60,10 @@ public class MainActivity extends AppCompatActivity {
         // Tab Setup Here
         TabHost tabs = (TabHost) findViewById(R.id.tabhost);
         tabs.setup();
-        TabHost.TabSpec spec = tabs.newTabSpec("restaurants").setContent(R.id.restaurantsTab).setIndicator("Restaurants");
+        TabHost.TabSpec spec = tabs.newTabSpec("restaurants").setContent(R.id.restaurantsTab).setIndicator("Restaurants",getDrawable(R.drawable.settings_icon));
         tabs.addTab(spec);
-        spec = tabs.newTabSpec("options").setContent(R.id.optionsTab).setIndicator("Options");
-        tabs.addTab(spec);
+        TabHost.TabSpec spec2 = tabs.newTabSpec("options").setContent(R.id.optionsTab).setIndicator("Options",getDrawable(R.drawable.settings_icon));
+        tabs.addTab(spec2);
 
         // Tab 1 Setup
         restaurantRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -77,7 +81,38 @@ public class MainActivity extends AppCompatActivity {
 
         // Tab 2 Setup
         searchRadiusValue = (EditText) findViewById(R.id.radiusValue);
-        searchRadiusValue.setFilters(new InputFilter[]{new InputFilterMinMax(0,25)});
+        searchRadiusValue.setFilters(new InputFilter[]{new InputFilterMinMax(0,25), new InputFilter.LengthFilter(4)});
+        searchRadiusValue.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                searchRadiusValue.setCursorVisible(b);
+                if(!b){
+                    InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+            }
+        });
 
+        ratingSeekBar = (ThumbTextSeekBar) findViewById(R.id.ratingBar);
+        ratingSeekBar.setThumbText("None");
+        ratingSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+                if(progress == 0)
+                    ratingSeekBar.setThumbText("None");
+                else
+                    ratingSeekBar.setThumbText(String.format( "%.1f", (progress + 1)/2.0));
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}});
+
+        YelpHelper y = null;
+        try {
+            y = new YelpHelper(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

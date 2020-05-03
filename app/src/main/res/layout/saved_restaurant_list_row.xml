@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="6dip">
+
+    <TextView
+        android:id="@+id/first_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center_vertical"
+        android:paddingBottom="3pt"
+        android:text="Example application"
+        android:textSize="16sp" />
+
+    <ImageView
+        android:id="@+id/ratingIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/first_line"
+        android:src="@drawable/stars0" />
+
+
+    <Button
+        android:id="@+id/addRemoveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="Add to roll"
+        android:drawablePadding="10dp"
+        android:paddingHorizontal="7dp"
+        android:layout_alignParentEnd="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:drawableRight="@drawable/plus" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/addRemoveButton"
+        android:text="0mi"
+        android:textSize="14sp" />
+</RelativeLayout>
