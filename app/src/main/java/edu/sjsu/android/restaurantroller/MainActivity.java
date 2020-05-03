@@ -5,8 +5,11 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.SearchManager;
+import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -75,5 +78,6 @@ public class MainActivity extends AppCompatActivity {
         // Tab 2 Setup
         searchRadiusValue = (EditText) findViewById(R.id.radiusValue);
         searchRadiusValue.setFilters(new InputFilter[]{new InputFilterMinMax(0,25)});
+
     }
 }

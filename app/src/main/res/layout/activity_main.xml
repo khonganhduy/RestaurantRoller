@@ -20,15 +20,9 @@
             android:layout_alignParentStart="true"
             android:text="Button"
             android:layout_margin="5dp"
-            android:background="@drawable/add_btn"
+            android:src="@drawable/add_btn"
+            android:background="?attr/selectableItemBackgroundBorderless"
             />
-
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text="Button" />
     </RelativeLayout>
 
     <TabHost
