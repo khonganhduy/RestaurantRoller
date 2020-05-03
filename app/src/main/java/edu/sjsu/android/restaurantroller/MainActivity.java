@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -66,21 +67,6 @@ public class MainActivity extends AppCompatActivity {
         // Tab 2 Setup
         searchRadiusValue = (EditText) findViewById(R.id.radiusValue);
         searchRadiusValue.setFilters(new InputFilter[]{new InputFilterMinMax(0,25), new InputFilter.LengthFilter(4)});
-        /*searchRadiusValue.addTextChangedListener(new TextWatcher()  {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            @Override
-            public void afterTextChanged(Editable s)  {
-                String val = searchRadiusValue.getText().toString();
-                if(!val.isEmpty()){
-                    if (Double.parseDouble(val) > 25)
-                        searchRadiusValue.setError("Maximum is 25 miles");
-                    else
-                        searchRadiusValue.setError(null);
-                }
-            }});*/
         searchRadiusValue.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -91,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
         ratingSeekBar = (ThumbTextSeekBar) findViewById(R.id.ratingBar);
         ratingSeekBar.setThumbText("None");
         ratingSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -106,17 +93,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}});
 
-            YelpFusionApiFactory a = new YelpFusionApiFactory();
+        YelpHelper y = null;
         try {
-            a.createAPI("Ni4mFTF0sjaHGiiHtdkR7QkEgLOgO7sqoCBjzVmIEs-C0gLXpUcip73U7f5Mm8MspHlU6frco8WAbEJa7PalRDKt2Csi-3GHvi6S8gNrAxR-MMQwe5NMFKzSdQiLXnYx");
+            y = new YelpHelper(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
-            /*try{
-                new YelpHelper(this);
-            } catch (IOException e){
-                Toast toast = Toast.makeText(this, "Connection to Yelp services failed.", Toast.LENGTH_LONG);
-            }*/
-
     }
 }
