@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/shopIcon"
-        android:layout_width="200px"
-        android:layout_height="200px"
+        android:layout_width="160px"
+        android:layout_height="160px"
         android:layout_marginTop="3dp"
         android:scaleType="fitCenter"
         android:src="@drawable/questionmark" />
@@ -18,16 +18,16 @@
         android:layout_height="wrap_content"
         android:layout_alignWithParentIfMissing="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="7dp"
+        android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/shopIcon"
         android:gravity="center_vertical"
         android:text="Example application"
-        android:textSize="21dp" />
+        android:textSize="18dp" />
 
     <ImageView
         android:id="@+id/ratingIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
+        android:layout_width="90dp"
+        android:layout_height="18dp"
         android:layout_below="@+id/first_line"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="3dp"
@@ -41,12 +41,12 @@
         android:layout_height="wrap_content"
         android:layout_alignWithParentIfMissing="true"
         android:layout_below="@+id/ratingIcon"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/shopIcon"
         android:gravity="center_vertical"
         android:paddingBottom="3pt"
         android:text="0 Ratings"
-        android:textSize="14dp" />
+        android:textSize="12dp" />
 
     <TextView
         android:layout_width="wrap_content"
