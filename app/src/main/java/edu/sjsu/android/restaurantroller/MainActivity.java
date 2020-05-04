@@ -6,16 +6,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.SearchRecentSuggestions;
-import android.text.Editable;
 import android.text.InputFilter;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TabHost;
 import android.widget.Toast;
@@ -26,7 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends MainActionBarActivity {
 
     // Buttons
     private ImageButton addRestaurantBtn;
@@ -46,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Button Setup
+        // Creates fragment to add a restaurant
         addRestaurantBtn = (ImageButton) findViewById(R.id.add_restaurant_btn);
         addRestaurantBtn.setOnClickListener(new View.OnClickListener() {
             @Override
