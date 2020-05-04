@@ -13,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ImageButton;
@@ -26,7 +27,7 @@ import java.util.Arrays;
 public class MainActivity extends MainActionBarActivity {
 
     // Buttons
-    private ImageButton addRestaurantBtn;
+    private Button addRestaurantBtn;
 
     // Start labelling instance variables to the subtab they correlate to
 
@@ -45,16 +46,7 @@ public class MainActivity extends MainActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Creates fragment to add a restaurant
-        addRestaurantBtn = (ImageButton) findViewById(R.id.add_restaurant_btn);
-        addRestaurantBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AddRestaurantFragment dialogFragment = new AddRestaurantFragment();
-                AppCompatActivity activity = (AppCompatActivity) view.getContext();
-                dialogFragment.show(activity.getSupportFragmentManager(), "editText");
-            }
-        });
+
 
         // Tab Setup Here
         TabHost tabs = (TabHost) findViewById(R.id.tabhost);
@@ -78,6 +70,15 @@ public class MainActivity extends MainActionBarActivity {
         restaurantAdapter = new RestaurantListAdapter(restaurantList);
         restaurantRecyclerView.addItemDecoration(new DividerItemDecoration(restaurantRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         restaurantRecyclerView.setAdapter(restaurantAdapter);
+
+        // Creates fragment to add a restaurant
+        addRestaurantBtn = findViewById(R.id.add_restaurant_btn);
+        addRestaurantBtn.setOnClickListener(view -> {
+            AddRestaurantFragment dialogFragment = new AddRestaurantFragment();
+            AppCompatActivity activity = (AppCompatActivity) view.getContext();
+            dialogFragment.show(activity.getSupportFragmentManager(), "editText");
+        });
+
 
 
         // Options Tab Setup
