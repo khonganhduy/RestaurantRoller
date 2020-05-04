@@ -20,6 +20,8 @@
 
                 <include layout="@layout/activity_restaurant_list"
                     android:id="@+id/restaurantsTab"/>
+                <include layout="@layout/activity_favorite_list"
+                    android:id="@+id/favoritesTab"/>
                 <include layout="@layout/activity_options"
                     android:id="@+id/optionsTab"/>
             </FrameLayout>

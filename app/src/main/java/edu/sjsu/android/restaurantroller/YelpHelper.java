@@ -46,6 +46,7 @@ public class YelpHelper {
             }
             return response;
         }
+
     }
     protected class YelpQueryBuilder {
         private double lat = 0, lon = 0;
@@ -77,7 +78,7 @@ public class YelpHelper {
             return this;
         }
         protected YelpQueryBuilder setSearchTerm(String term){
-
+            searchTerm = term;
             return this;
         }
         protected Response<SearchResponse> executeQuery() throws ExecutionException, InterruptedException {
@@ -97,6 +98,9 @@ public class YelpHelper {
             prices.concat(Integer.toString(i));
             params.put("price", prices);
 
+            // Search term
+            params.put("term", searchTerm);
+
             // Restaurants should be open
             params.put("open_now", "true");
             // Search return limit
@@ -110,21 +114,4 @@ public class YelpHelper {
     public int milesToMeters(double miles){
         return (int) (miles * 1609.34);
     }
-
-
-
-    protected void keyTest(){
-
-
-        Map<String, String> params = new HashMap<>();
-
-        // general params
-        params.put("term", "indian food");
-        params.put("latitude", "40.581140");
-        params.put("longitude", "-111.914184");
-
-        new YelpQuery().execute(params);
-
-    }
-
 }
