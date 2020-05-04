@@ -43,12 +43,14 @@ public class MainActivity extends AppCompatActivity {
         // Tab Setup Here
         TabHost tabs = (TabHost) findViewById(R.id.tabhost);
         tabs.setup();
-        TabHost.TabSpec spec = tabs.newTabSpec("restaurants").setContent(R.id.restaurantsTab).setIndicator("Restaurants",getDrawable(R.drawable.settings_icon));
+        TabHost.TabSpec spec = tabs.newTabSpec("roller").setContent(R.id.restaurantsTab).setIndicator("Roll");
         tabs.addTab(spec);
-        TabHost.TabSpec spec2 = tabs.newTabSpec("options").setContent(R.id.optionsTab).setIndicator("Options",getDrawable(R.drawable.settings_icon));
+        TabHost.TabSpec spec2 = tabs.newTabSpec("saved").setContent(R.id.favoritesTab).setIndicator("Favorites");
         tabs.addTab(spec2);
+        TabHost.TabSpec spec3 = tabs.newTabSpec("options").setContent(R.id.optionsTab).setIndicator("Options");
+        tabs.addTab(spec3);
 
-        // Tab 1 Setup
+        // Roller Tab Setup
         restaurantRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         restaurantRecyclerView.setAdapter(restaurantAdapter);
 
 
-        // Tab 2 Setup
+        // Options Tab Setup
         optionsTab = findViewById(R.id.optionsTab);
         optionsTab.setOnFocusChangeListener((view, b) -> {
             if(b){
