@@ -8,17 +8,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TabHost;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import com.yelp.fusion.client.connection.YelpFusionApiFactory;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -35,8 +36,10 @@ public class MainActivity extends MainActionBarActivity {
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<String> restaurantList;
     // Tab 2 variables
-    private EditText searchRadiusValue;
+    private LinearLayout optionsTab;
+    private EditText searchTermText, searchRadiusText;
     private ThumbTextSeekBar ratingSeekBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,12 +59,14 @@ public class MainActivity extends MainActionBarActivity {
         // Tab Setup Here
         TabHost tabs = (TabHost) findViewById(R.id.tabhost);
         tabs.setup();
-        TabHost.TabSpec spec = tabs.newTabSpec("restaurants").setContent(R.id.restaurantsTab).setIndicator("Restaurants",getDrawable(R.drawable.settings_icon));
+        TabHost.TabSpec spec = tabs.newTabSpec("roller").setContent(R.id.restaurantsTab).setIndicator("Roll");
         tabs.addTab(spec);
-        TabHost.TabSpec spec2 = tabs.newTabSpec("options").setContent(R.id.optionsTab).setIndicator("Options",getDrawable(R.drawable.settings_icon));
+        TabHost.TabSpec spec2 = tabs.newTabSpec("saved").setContent(R.id.favoritesTab).setIndicator("Favorites");
         tabs.addTab(spec2);
+        TabHost.TabSpec spec3 = tabs.newTabSpec("options").setContent(R.id.optionsTab).setIndicator("Options");
+        tabs.addTab(spec3);
 
-        // Tab 1 Setup
+        // Roller Tab Setup
         restaurantRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -75,19 +80,26 @@ public class MainActivity extends MainActionBarActivity {
         restaurantRecyclerView.setAdapter(restaurantAdapter);
 
 
-        // Tab 2 Setup
-        searchRadiusValue = (EditText) findViewById(R.id.radiusValue);
-        searchRadiusValue.setFilters(new InputFilter[]{new InputFilterMinMax(0,25), new InputFilter.LengthFilter(4)});
-        searchRadiusValue.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                searchRadiusValue.setCursorVisible(b);
-                if(!b){
-                    InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
+        // Options Tab Setup
+        optionsTab = findViewById(R.id.optionsTab);
+        optionsTab.setOnFocusChangeListener((view, b) -> {
+            if(b){
+                InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         });
+
+        searchTermText = findViewById(R.id.searchTerm);
+        searchTermText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                optionsTab.requestFocus();
+            }
+            return false;
+        });
+
+        searchRadiusText = (EditText) findViewById(R.id.radiusValue);
+        searchRadiusText.setFilters(new InputFilter[]{new InputFilterMinMax(0,25), new InputFilter.LengthFilter(4)});
+        searchRadiusText.setOnFocusChangeListener((view, b) -> searchRadiusText.setCursorVisible(b));
 
         ratingSeekBar = (ThumbTextSeekBar) findViewById(R.id.ratingBar);
         ratingSeekBar.setThumbText("None");
@@ -103,12 +115,5 @@ public class MainActivity extends MainActionBarActivity {
             public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}});
-
-        YelpHelper y = null;
-        try {
-            y = new YelpHelper(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

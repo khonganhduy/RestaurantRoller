@@ -6,6 +6,8 @@
     <string name="search_radius">Maximum Distance</string>
     <string name="search_rating">Minimum Rating</string>
     <string name="search_price">Price range</string>
+    <string name="search_term_title">Search For:</string>
+    <string name="search_term_hint">Enter a term</string>
     <string name="search_hint">Search Tags</string>
     <string name="help">Help</string>
     <string-array name="ratings_list">

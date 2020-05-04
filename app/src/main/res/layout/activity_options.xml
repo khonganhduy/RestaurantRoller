@@ -21,6 +21,30 @@
         android:layout_gravity="center"
         app:layout_constraintBottom_toBottomOf="parent" />
 
+    <TextView
+        android:id="@+id/textView3"
+        android:paddingVertical="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/search_term_title"
+        android:textSize="10pt"
+        android:textColor="@color/yelpBlack"
+        android:layout_marginLeft="10sp"/>
+
+    <EditText
+        android:id="@+id/searchTerm"
+        android:layout_width="match_parent"
+        android:gravity="left"
+        android:layout_height="wrap_content"
+        android:hint="@string/search_term_hint"
+        android:textColor="@color/yelpBlack"
+        android:textColorHint="@color/yelpTextGhost"
+        android:inputType="text"
+        android:textSize="10pt"
+        android:cursorVisible="true"
+        android:focusedByDefault="false"
+        android:layout_marginHorizontal="6sp"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

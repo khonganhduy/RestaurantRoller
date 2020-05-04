@@ -71,13 +71,14 @@
             android:text="0"
             android:textSize="16sp" />
 
-        <LinearLayout
-            android:id="@+id/weightbuttons"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/weightbuttons"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
 
             <ImageButton
                 android:id="@+id/increase"
