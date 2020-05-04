@@ -24,6 +24,18 @@
             android:drawableLeft="@drawable/plus"
             android:drawablePadding="10dp"
             android:background="?attr/selectableItemBackgroundBorderless" />
+
+        <Button
+            android:id="@+id/roll_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:text="Roll Restaurants"
+            android:layout_marginRight="5dp"
+            android:textSize="12dp"
+            android:drawableLeft="@drawable/plus"
+            android:drawablePadding="10dp"
+            android:background="?attr/selectableItemBackgroundBorderless" />
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
