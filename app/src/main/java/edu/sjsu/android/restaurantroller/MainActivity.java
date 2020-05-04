@@ -21,6 +21,7 @@ import android.widget.SeekBar;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -28,6 +29,7 @@ public class MainActivity extends MainActionBarActivity {
 
     // Buttons
     private Button addRestaurantBtn;
+    private Button rollRestaurantsBtn;
 
     // Start labelling instance variables to the subtab they correlate to
 
@@ -35,7 +37,8 @@ public class MainActivity extends MainActionBarActivity {
     private RecyclerView restaurantRecyclerView;
     private RecyclerView.Adapter restaurantAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private ArrayList<String> restaurantList;
+    private ArrayList<WeightedRestaurant> restaurantList;
+    //private ArrayList<String> restaurantList;
     // Tab 2 variables
     private LinearLayout optionsTab;
     private EditText searchTermText, searchRadiusText;
@@ -45,7 +48,6 @@ public class MainActivity extends MainActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
 
         // Tab Setup Here
@@ -60,13 +62,14 @@ public class MainActivity extends MainActionBarActivity {
 
         // Roller Tab Setup
         restaurantRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
         restaurantRecyclerView.setHasFixedSize(true);
-
         layoutManager = new LinearLayoutManager(this);
         restaurantRecyclerView.setLayoutManager(layoutManager);
-        restaurantList = new ArrayList<String>(Arrays.asList("Test 1", "Test 2"));
+
+        // DUMMY DATA
+        restaurantList = new ArrayList<WeightedRestaurant>();
+        restaurantList.add(new WeightedRestaurant("test 1"));
+        restaurantList.add(new WeightedRestaurant("test 2"));
         restaurantAdapter = new RestaurantListAdapter(restaurantList);
         restaurantRecyclerView.addItemDecoration(new DividerItemDecoration(restaurantRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         restaurantRecyclerView.setAdapter(restaurantAdapter);
@@ -79,6 +82,18 @@ public class MainActivity extends MainActionBarActivity {
             dialogFragment.show(activity.getSupportFragmentManager(), "editText");
         });
 
+        // Rolls the restaurants and selects one randomly based on the weights
+        rollRestaurantsBtn = (Button) findViewById(R.id.roll_btn);
+        rollRestaurantsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int[] weights = new int[restaurantList.size()];
+                for (int i = 0; i < weights.length; i++){
+                    weights[i] = restaurantList.get(i).getWeight();
+                }
+
+            }
+        });
 
 
         // Options Tab Setup
