@@ -6,22 +6,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.InputFilter;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.View;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TabHost;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import com.yelp.fusion.client.connection.YelpFusionApiFactory;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -35,8 +31,10 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<String> restaurantList;
     // Tab 2 variables
-    private EditText searchRadiusValue;
+    private LinearLayout optionsTab;
+    private EditText searchTermText, searchRadiusText;
     private ThumbTextSeekBar ratingSeekBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,18 +63,25 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Tab 2 Setup
-        searchRadiusValue = (EditText) findViewById(R.id.radiusValue);
-        searchRadiusValue.setFilters(new InputFilter[]{new InputFilterMinMax(0,25), new InputFilter.LengthFilter(4)});
-        searchRadiusValue.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                searchRadiusValue.setCursorVisible(b);
-                if(!b){
-                    InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
+        optionsTab = findViewById(R.id.optionsTab);
+        optionsTab.setOnFocusChangeListener((view, b) -> {
+            if(b){
+                InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         });
+
+        searchTermText = findViewById(R.id.searchTerm);
+        searchTermText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                optionsTab.requestFocus();
+            }
+            return false;
+        });
+
+        searchRadiusText = (EditText) findViewById(R.id.radiusValue);
+        searchRadiusText.setFilters(new InputFilter[]{new InputFilterMinMax(0,25), new InputFilter.LengthFilter(4)});
+        searchRadiusText.setOnFocusChangeListener((view, b) -> searchRadiusText.setCursorVisible(b));
 
         ratingSeekBar = (ThumbTextSeekBar) findViewById(R.id.ratingBar);
         ratingSeekBar.setThumbText("None");
@@ -92,12 +97,5 @@ public class MainActivity extends AppCompatActivity {
             public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}});
-
-        YelpHelper y = null;
-        try {
-            y = new YelpHelper(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
