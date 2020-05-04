@@ -11,9 +11,11 @@ import android.text.InputFilter;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -21,7 +23,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends MainActionBarActivity {
+
+    // Buttons
+    private ImageButton addRestaurantBtn;
 
     // Start labelling instance variables to the subtab they correlate to
 
@@ -39,6 +44,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Creates fragment to add a restaurant
+        addRestaurantBtn = (ImageButton) findViewById(R.id.add_restaurant_btn);
+        addRestaurantBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddRestaurantFragment dialogFragment = new AddRestaurantFragment();
+                AppCompatActivity activity = (AppCompatActivity) view.getContext();
+                dialogFragment.show(activity.getSupportFragmentManager(), "editText");
+            }
+        });
 
         // Tab Setup Here
         TabHost tabs = (TabHost) findViewById(R.id.tabhost);
