@@ -7,57 +7,79 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.InputFilter;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TabHost;
-import android.widget.TextView;
 
-import java.lang.reflect.Array;
+import com.yelp.fusion.client.models.SearchResponse;
+
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
+
+import retrofit2.Response;
 
 public class MainActivity extends MainActionBarActivity {
+    protected static final int QUERY_FINISHED = 1;
 
     // Buttons
     private Button addRestaurantBtn;
     private Button rollRestaurantsBtn;
 
     // Start labelling instance variables to the subtab they correlate to
+    private TabHost tabs;
 
-    // Tab 1 variables
+    // Roller Tab variables
     private RecyclerView restaurantRecyclerView;
     private RecyclerView.Adapter restaurantAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<WeightedRestaurant> restaurantList;
     //private ArrayList<String> restaurantList;
-    // Tab 2 variables
+    // Search Tab variables
     private LinearLayout optionsTab;
     private EditText searchTermText, searchRadiusText;
     private ThumbTextSeekBar ratingSeekBar;
+    private Button searchButton;
+    private Spinner minSpinner, maxSpinner;
+
+    private Handler handler = new Handler(Looper.getMainLooper()){
+
+        @Override
+        public void handleMessage(Message inputMessage){
+
+            switch(inputMessage.what){
+                case QUERY_FINISHED:
+                    onQueryFinish((Response<SearchResponse>)inputMessage.obj);
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         // Tab Setup Here
-        TabHost tabs = (TabHost) findViewById(R.id.tabhost);
+        tabs = (TabHost) findViewById(R.id.tabhost);
         tabs.setup();
         TabHost.TabSpec spec = tabs.newTabSpec("roller").setContent(R.id.restaurantsTab).setIndicator("Roll");
         tabs.addTab(spec);
         TabHost.TabSpec spec2 = tabs.newTabSpec("saved").setContent(R.id.favoritesTab).setIndicator("Favorites");
         tabs.addTab(spec2);
-        TabHost.TabSpec spec3 = tabs.newTabSpec("options").setContent(R.id.optionsTab).setIndicator("Options");
+        TabHost.TabSpec spec3 = tabs.newTabSpec("options").setContent(R.id.optionsTab).setIndicator("Search");
         tabs.addTab(spec3);
 
         // Roller Tab Setup
@@ -96,7 +118,7 @@ public class MainActivity extends MainActionBarActivity {
         });
 
 
-        // Options Tab Setup
+        // Search Tab Setup
         optionsTab = findViewById(R.id.optionsTab);
         optionsTab.setOnFocusChangeListener((view, b) -> {
             if(b){
@@ -131,5 +153,65 @@ public class MainActivity extends MainActionBarActivity {
             public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}});
+
+        minSpinner = findViewById(R.id.priceMin);
+        minSpinner.setSelection(0);
+        minSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+                if(maxSpinner.getSelectedItemPosition() < pos)
+                    maxSpinner.setSelection(pos); }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}});
+        maxSpinner = findViewById(R.id.priceMax);
+        maxSpinner.setSelection(3);
+        maxSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+                if (minSpinner.getSelectedItemPosition() > pos)
+                    minSpinner.setSelection(pos); }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView){}});
+
+        // Instantiates yelp API, do not remove!
+        try {
+            YelpHelper yelp = new YelpHelper(this);
+        } catch (IOException e) {
+            e.printStackTrace(); // TODO show toast on exception
+        }
+
+        searchButton = (Button) findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(view -> {
+            YelpHelper.YelpQueryBuilder query = new YelpHelper.YelpQueryBuilder()
+                    .setMinMaxPrice(minSpinner.getSelectedItemPosition() + 1, maxSpinner.getSelectedItemPosition() + 1)
+
+                    .setLatLong(37.4256019322,-121.910018101); // TODO get GPS coordinates and shove them here
+
+            String term = searchTermText.getText().toString();
+            if(!term.isEmpty())
+                query.setSearchTerm(term);
+            String rad = searchRadiusText.getText().toString();
+            if(!rad.isEmpty())
+                query.setRadius(Double.parseDouble(rad));
+            int rating = ratingSeekBar.getProgress();
+            if(rating > 0)
+                query.setRatingMin(rating);
+
+
+            try {
+                YelpHelper.YelpQuery runningQuery = query.executeQuery(handler);
+            } catch (ExecutionException e) {
+                e.printStackTrace(); // TODO Show toasts on exceptions
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
+        });
+    }
+
+    protected void onQueryFinish(Response<SearchResponse> r){
+        Log.i("asyncro response", r.toString());
+        tabs.setCurrentTab(0);
     }
 }

@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.res.Resources;
 
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 
 import com.yelp.fusion.client.connection.YelpFusionApi;
 import com.yelp.fusion.client.connection.YelpFusionApiFactory;
@@ -18,6 +21,8 @@ import java.util.concurrent.ExecutionException;
 import retrofit2.Call;
 import retrofit2.Response;
 
+import static edu.sjsu.android.restaurantroller.MainActivity.QUERY_FINISHED;
+
 
 public class YelpHelper {
     private static YelpFusionApi api = null;
@@ -30,30 +35,42 @@ public class YelpHelper {
                 api = new YelpFusionApiFactory().createAPI(yelp_key);
         }
     }
-    protected class YelpQuery extends AsyncTask<Map<String, String>, Void, Response<SearchResponse>> {
-
+    protected static class YelpQuery extends AsyncTask<Map<String, String>, Void, Response<SearchResponse>> {
+        private Response<SearchResponse> response = null;
+        private Handler handler;
+        protected YelpQuery(Handler responseHandler){
+            handler = responseHandler;
+        }
         @Override
         protected Response<SearchResponse> doInBackground(Map<String, String>... maps){
             Map<String,String> params = new HashMap();
             for(Map a: maps)
                 params.putAll(a);
             Call<SearchResponse> call = api.getBusinessSearch(params);
-            Response<SearchResponse> response = null;
             try {
                  response = call.execute();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            if(api == null)
+                Log.i("api", "null");
+            //Log.i("testing responses", response.toString());
             return response;
         }
 
+        @Override
+        protected void onPostExecute(Response<SearchResponse> searchResponseResponse) {
+            super.onPostExecute(searchResponseResponse);
+            Message m = handler.obtainMessage(QUERY_FINISHED, response);
+            m.sendToTarget();
+        }
     }
-    protected class YelpQueryBuilder {
+    protected static class YelpQueryBuilder {
         private double lat = 0, lon = 0;
-        private int radius = 0;
+        private int radius = 40000;
         private int minCost = 1, maxCost = 4;
-        private String searchTerm;
-
+        private double rating = 0;
+        private String searchTerm = null;
         protected YelpQueryBuilder(){}
 
         protected YelpQueryBuilder setLatLong(double latitude, double longitude){
@@ -81,7 +98,15 @@ public class YelpHelper {
             searchTerm = term;
             return this;
         }
-        protected Response<SearchResponse> executeQuery() throws ExecutionException, InterruptedException {
+
+        protected YelpQueryBuilder setRatingMin(double min){
+            rating = min;
+            return this;
+        }
+        protected YelpQuery executeQuery(Handler responseHandler) throws ExecutionException, InterruptedException, NullPointerException {
+;
+            if(api == null)
+                throw new NullPointerException("Api is null, instantiate a YelpHelper first");
             Map<String, String> params = new HashMap<>();
             // Location
             params.put("latitude", Double.toString(lat));
@@ -92,26 +117,30 @@ public class YelpHelper {
             String prices = "";
             int i = minCost;
             while(i < maxCost){
-                prices.concat(Integer.toString(i)).concat(", ");
+                prices = prices.concat(Integer.toString(i)).concat(", ");
                 i++;
             }
-            prices.concat(Integer.toString(i));
+            prices = prices.concat(Integer.toString(i));
             params.put("price", prices);
-
             // Search term
-            params.put("term", searchTerm);
+            if(searchTerm != null)
+                params.put("term", searchTerm);
 
             // Restaurants should be open
             params.put("open_now", "true");
             // Search return limit
             params.put("limit", "50");
 
-            YelpQuery q = new YelpQuery();
+            if(rating > 0){
+                params.put("sort_by", "rating");
+            }
+
+            YelpQuery q = new YelpQuery(responseHandler);
             q.execute(params);
-            return q.get();
+            return q;
         }
     }
-    public int milesToMeters(double miles){
+    public static int milesToMeters(double miles){
         return (int) (miles * 1609.34);
     }
 }

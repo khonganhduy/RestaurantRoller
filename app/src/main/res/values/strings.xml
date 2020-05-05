@@ -8,8 +8,9 @@
     <string name="search_price">Price range</string>
     <string name="search_term_title">Search For:</string>
     <string name="search_term_hint">Enter a term</string>
-    <string name="search__tag_hint">Search Tags</string>
+    <string name="search_tag_hint">Search Tags</string>
     <string name="help">Help</string>
+    <string name="search_button_text">Search</string>
     <string-array name="ratings_list">
         <item>None</item>
         <item>1</item>

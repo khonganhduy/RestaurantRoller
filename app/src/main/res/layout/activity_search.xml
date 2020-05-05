@@ -169,5 +169,22 @@
             android:entries="@array/prices_list" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:src="@drawable/loading"
+            app:layout_constraintTop_toTopOf="parent"/>
+        <Button
+            android:id="@+id/searchButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/search_button_text"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+    </LinearLayout>
 
 </LinearLayout>

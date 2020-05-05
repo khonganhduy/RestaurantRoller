@@ -78,4 +78,7 @@ public class ThumbTextSeekBar extends LinearLayout {
             seekBar.setProgress(progress);
         }
     }
+    public int getProgress(){
+        return seekBar.getProgress();
+    }
 }
