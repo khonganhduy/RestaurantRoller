@@ -26,7 +26,9 @@
             android:layout_toRightOf="@+id/shopIcon"
             android:gravity="center_vertical"
             android:text="Example application"
-            android:textSize="18dp" />
+            android:textSize="18sp"
+            android:maxLines="1"
+            android:ellipsize="end"/>
 
         <ImageView
             android:id="@+id/ratingIcon"
@@ -51,7 +53,17 @@
             android:paddingBottom="3pt"
             android:text="0 Ratings"
             android:textSize="12dp" />
-
+        <ImageButton
+            android:id="@+id/yelp_button"
+            android:layout_width="46dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_below="@id/first_line"
+            android:layout_toRightOf="@id/ratingIcon"
+            android:scaleType="fitCenter"
+            android:background="@android:color/transparent"
+            android:src="@drawable/yelp_logo"/>
 
     </RelativeLayout>
 

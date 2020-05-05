@@ -2,7 +2,7 @@ package edu.sjsu.android.restaurantroller;
 
 import android.app.Application;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class RestaurantData {
     private RestaurantDAO dao;
@@ -30,11 +30,11 @@ public class RestaurantData {
         });
     }
 
-    ArrayList<RestaurantEntity> getAllByName(final String name){
+    List<RestaurantEntity> getAllByName(final String name){
         return dao.getByName(name);
     }
 
-    ArrayList<RestaurantEntity> getAllByTag(final String tag){
+    List<RestaurantEntity> getAllByTag(final String tag){
         return dao.getByTag(tag);
     }
 

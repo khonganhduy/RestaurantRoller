@@ -1,18 +1,20 @@
 package edu.sjsu.android.restaurantroller;
 
+import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import java.util.ArrayList;
+import java.util.List;
 
 //Query commands here
+@Dao
 public interface RestaurantDAO {
     @Query("SELECT * FROM restaurant WHERE restaurant_name = (:name)")
-    ArrayList<RestaurantEntity> getByName(String name);
+    List<RestaurantEntity> getByName(String name);
 
     @Query("SELECT * FROM restaurant WHERE tag = (:tag)")
-    ArrayList<RestaurantEntity> getByTag(String tag);
+    List<RestaurantEntity> getByTag(String tag);
 
     @Query("DELETE FROM restaurant WHERE tag = (:tag)")
     void deleteAllByTag(String tag);

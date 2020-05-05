@@ -23,6 +23,8 @@ public class RestaurantEntity {
         this.tag = tag;
     }
 
+    public int getEntryId(){ return entryId; }
+    public void setEntryId(int entryId){ this.entryId = entryId; }
     public String getName() {
         return name;
     }
