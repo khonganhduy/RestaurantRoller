@@ -1,5 +1,6 @@
 package edu.sjsu.android.restaurantroller;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,21 +15,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
-public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAdapter.RestaurantViewHolder>{
+public class RollerListAdapter extends RecyclerView.Adapter<RollerListAdapter.RollverViewHolder>{
 
     private ArrayList<Restaurant> mDataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class RestaurantViewHolder extends RecyclerView.ViewHolder {
+    public static class RollverViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         private View view;
         private TextView nameTextView, ratingCountView, distanceView, rollWeightView;
         private ImageButton increaseWeight, decreaseWeight, yelpButton;
         private ImageView ratingIcon, restaurantIcon;
 
-        public RestaurantViewHolder(View v) {
+        public RollverViewHolder(View v) {
             super(v);
             view = v;
             nameTextView = (TextView) v.findViewById(R.id.first_line);
@@ -37,7 +38,8 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
             decreaseWeight = (ImageButton) v.findViewById(R.id.decrease);
             yelpButton = (ImageButton) v.findViewById(R.id.yelp_button);
 
-            ratingCountView = (TextView) v.findViewById(R.id.rating_text);
+
+            ratingCountView = (TextView) v.findViewById(R.id.rating_count_text);
             ratingIcon = (ImageView) v.findViewById(R.id.rating_icon);
 
             restaurantIcon = (ImageView) v.findViewById(R.id.shop_icon);
@@ -47,7 +49,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RestaurantListAdapter(ArrayList<Restaurant> myDataset) {
+    public RollerListAdapter(ArrayList<Restaurant> myDataset) {
         mDataset = myDataset;
     }
 
@@ -58,18 +60,18 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
 
     // Create new views (invoked by the layout manager)
     @Override
-    public RestaurantViewHolder onCreateViewHolder(ViewGroup parent,
-                                                   int viewType) {
+    public RollverViewHolder onCreateViewHolder(ViewGroup parent,
+                                                int viewType) {
         // create a new view
         View v = (View) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.restaurant_list_row, parent, false);
-        RestaurantViewHolder vh = new RestaurantViewHolder(v);
+                .inflate(R.layout.roller_list_row, parent, false);
+        RollverViewHolder vh = new RollverViewHolder(v);
         return vh;
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(RestaurantViewHolder holder, final int position) {
+    public void onBindViewHolder(RollverViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 

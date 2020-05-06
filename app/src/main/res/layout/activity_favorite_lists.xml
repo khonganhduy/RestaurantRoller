@@ -14,32 +14,57 @@
         android:background="@color/yelpBackground">
 
         <Button
-            android:id="@+id/add_restaurant_btn"
+            android:id="@+id/delete_mode_btn"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_alignParentStart="true"
-            android:text="Add Restaurant"
-            android:layout_marginLeft="5dp"
+            android:text="Delete Mode"
+            android:layout_marginLeft="10dp"
             android:textSize="12dp"
-            android:drawableLeft="@drawable/plus"
+            android:drawableLeft="@drawable/minus"
             android:drawablePadding="10dp"
             android:background="?attr/selectableItemBackgroundBorderless" />
 
         <Button
-            android:id="@+id/roll_btn"
+            android:id="@+id/add_restaurant_btn"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_alignParentEnd="true"
-            android:text="Roll Restaurants"
-            android:layout_marginRight="5dp"
+            android:text="Add Restaurant"
+            android:layout_marginRight="10dp"
             android:textSize="12dp"
-            android:drawableLeft="@drawable/plus"
+            android:drawableRight="@drawable/plus"
             android:drawablePadding="10dp"
             android:background="?attr/selectableItemBackgroundBorderless" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/yelpBackground">
+
+        <ImageView
+            android:id="@+id/search_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitCenter"
+            android:layout_marginLeft="10dp"
+            android:scaleX=".7"
+            android:scaleY=".7"
+            android:src="@drawable/search"/>
+        <EditText
+            android:layout_marginHorizontal="10dp"
+            android:id="@+id/search_filter_text"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:hint="Enter Tags"
+            android:textSize="12dp"
+            android:layout_toRightOf="@id/search_icon" />
+
+    </RelativeLayout>
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
+        android:id="@+id/favorites_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>
