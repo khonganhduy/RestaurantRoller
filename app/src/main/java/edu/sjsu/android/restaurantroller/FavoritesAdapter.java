@@ -74,10 +74,6 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
         holder.addRemoveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                String check = restaurant.inRoller() ? "Remove from": "Add to";
-                holder.addRemoveBtn.setText(check + " Roll");
-
                 if(restaurant.inRoller())
                     MainActivity.rollerList.remove(restaurant);
                 else
@@ -86,6 +82,9 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
                 notifyDataSetChanged();
             }}
         );
+
+        String check = restaurant.inRoller() ? "Remove": "Add";
+        holder.addRemoveBtn.setText(check);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
