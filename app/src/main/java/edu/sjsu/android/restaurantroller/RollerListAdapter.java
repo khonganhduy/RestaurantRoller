@@ -1,5 +1,7 @@
 package edu.sjsu.android.restaurantroller;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +28,7 @@ public class RollerListAdapter extends RecyclerView.Adapter<RollerListAdapter.Ro
         // each data item is just a string in this case
         private View view;
         private TextView nameTextView, ratingCountView, distanceView, rollWeightView;
-        private ImageButton increaseWeight, decreaseWeight, yelpButton;
+        private ImageButton increaseWeight, decreaseWeight, yelpLaunch;
         private ImageView ratingIcon, restaurantIcon;
 
         public RollverViewHolder(View v) {
@@ -36,8 +38,7 @@ public class RollerListAdapter extends RecyclerView.Adapter<RollerListAdapter.Ro
             rollWeightView = (TextView) v.findViewById(R.id.roll_weight);
             increaseWeight = (ImageButton) v.findViewById(R.id.increase);
             decreaseWeight = (ImageButton) v.findViewById(R.id.decrease);
-            yelpButton = (ImageButton) v.findViewById(R.id.yelp_button);
-
+            yelpLaunch = (ImageButton) v.findViewById(R.id.yelp_button);
 
             ratingCountView = (TextView) v.findViewById(R.id.rating_count_text);
             ratingIcon = (ImageView) v.findViewById(R.id.rating_icon);
@@ -83,8 +84,12 @@ public class RollerListAdapter extends RecyclerView.Adapter<RollerListAdapter.Ro
             holder.ratingCountView.setVisibility(View.VISIBLE);
             holder.ratingIcon.setVisibility(View.VISIBLE);
             holder.distanceView.setVisibility(View.VISIBLE);
-            holder.yelpButton.setVisibility(View.VISIBLE);
+            holder.yelpLaunch.setVisibility(View.VISIBLE);
 
+            View.OnClickListener launchWeb = view -> launchWebsite(yelpRestaurant.getWebsiteURL(), holder.view);
+            Picasso.get().load(yelpRestaurant.getImageURL()).into(holder.restaurantIcon);
+            holder.restaurantIcon.setOnClickListener(launchWeb);
+            holder.yelpLaunch.setOnClickListener(launchWeb);
 
             holder.ratingCountView.setText(yelpRestaurant.getRatingCount() + " reviews");
             String rating = "stars" + Double.toString(yelpRestaurant.getRating()).replaceAll("\\.", "");
@@ -92,6 +97,8 @@ public class RollerListAdapter extends RecyclerView.Adapter<RollerListAdapter.Ro
             holder.distanceView.setText(String.format("%.2f",YelpHelper.metersToMiles(yelpRestaurant.getDistance())) + " mi");
             Picasso.get().load(yelpRestaurant.getImageURL()).into(holder.restaurantIcon);
         }
+
+
 
         // Changes weight when chevrons are clicked
         holder.increaseWeight.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +123,12 @@ public class RollerListAdapter extends RecyclerView.Adapter<RollerListAdapter.Ro
     @Override
     public int getItemCount() {
         return mDataset.size();
+    }
+
+    //make sure in format of "http://example.com"
+    protected void launchWebsite(String url, View v){
+        Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        v.getContext().startActivity(webIntent);
     }
 
 }
