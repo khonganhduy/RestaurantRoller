@@ -1,68 +1,98 @@
 package edu.sjsu.android.restaurantroller;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
 import com.yelp.fusion.client.models.Business;
 
 import java.util.ArrayList;
 
-public class SearchBusinessAdapter extends RecyclerView.Adapter<RollerListAdapter.RollverViewHolder> {
+public class SearchBusinessAdapter extends RecyclerView.Adapter<SearchBusinessAdapter.SearchBusinessViewHolder> {
 
     private ArrayList<Business> mDataset;
 
 
-    public static class BusinessViewHolder extends RecyclerView.ViewHolder {
+    public static class SearchBusinessViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         private View view;
         private TextView nameTextView, ratingCountView, distanceView;
-        private TextView rollWeightView;
-        private ImageButton addToRoll;
-        private ImageButton decreaseWeight;
+        private Button addRemoveBtn;
+        private ImageButton yelpLaunch;
+        private ImageView ratingIcon, restaurantIcon;
 
-        public BusinessViewHolder(View v) {
+        public SearchBusinessViewHolder(View v) {
             super(v);
             view = v;
             nameTextView = (TextView) v.findViewById(R.id.first_line);
-            rollWeightView = (TextView) v.findViewById(R.id.roll_weight);
-            addToRoll = (ImageButton) v.findViewById(R.id.increase);
+            yelpLaunch = (ImageButton) v.findViewById(R.id.yelp_button);
+
+            ratingCountView = (TextView) v.findViewById(R.id.rating_count_text);
+            ratingIcon = (ImageView) v.findViewById(R.id.rating_icon);
+
+            restaurantIcon = (ImageView) v.findViewById(R.id.shop_icon);
+
+            distanceView = (TextView) v.findViewById(R.id.distance_text);
+
+            addRemoveBtn = (Button) v.findViewById(R.id.add_remove_button);
         }
     }
+
     // Provide a suitable constructor (depends on the kind of dataset)
     public SearchBusinessAdapter(ArrayList<Business> myDataset) {
         mDataset = myDataset;
     }
 
-    //public void updateData(String data, int position){
-    //  mDataset.set(position, data);
-    //notifyItemChanged(position);
-    //}
-
-    // Create new views (invoked by the layout manager)
     @Override
-    public RollerListAdapter.RollverViewHolder onCreateViewHolder(ViewGroup parent,
-                                                                  int viewType) {
+    public SearchBusinessAdapter.SearchBusinessViewHolder onCreateViewHolder(ViewGroup parent,
+                                                                             int viewType) {
         // create a new view
         View v = (View) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.favorite_list_row, parent, false);
-        RollerListAdapter.RollverViewHolder vh = new RollerListAdapter.RollverViewHolder(v);
+                .inflate(R.layout.search_result_list_row, parent, false);
+        SearchBusinessAdapter.SearchBusinessViewHolder vh = new SearchBusinessAdapter.SearchBusinessViewHolder(v);
         return vh;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
-    @Override
-    public void onBindViewHolder(RollerListAdapter.RollverViewHolder holder, final int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
-        //WeightedRestaurant restaurant = mDataset.get(position);
-        //holder.nameTextView.setText(restaurant.getRestaurantName());
 
-        // Set the weight of the restauran
+    @Override
+    public void onBindViewHolder(SearchBusinessAdapter.SearchBusinessViewHolder holder, final int position) {
+
+        holder.ratingCountView.setVisibility(View.VISIBLE);
+        holder.ratingIcon.setVisibility(View.VISIBLE);
+        holder.distanceView.setVisibility(View.VISIBLE);
+        holder.yelpLaunch.setVisibility(View.VISIBLE);
+        holder.restaurantIcon.setVisibility(View.VISIBLE);
+
+        Business b = mDataset.get(position);
+        holder.nameTextView.setText(b.getName());
+
+        View.OnClickListener launchWeb = view -> launchWebsite(b.getUrl(), holder.view);
+        Picasso.get().load(b.getImageUrl().replaceAll("o\\.jpg", "ms.jpg")).into(holder.restaurantIcon);
+        holder.restaurantIcon.setOnClickListener(launchWeb);
+        holder.yelpLaunch.setOnClickListener(launchWeb);
+
+        holder.ratingCountView.setText(b.getReviewCount() + " reviews");
+        String rating = "stars" + Double.toString(b.getRating()).replaceAll("\\.", "");
+        holder.ratingIcon.setImageResource(holder.view.getResources().getIdentifier(rating, "drawable", "edu.sjsu.android.restaurantroller"));
+        holder.distanceView.setText(String.format("%.2f", YelpHelper.metersToMiles(b.getDistance())) + " mi");
+
+        holder.addRemoveBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                }
+        );
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -71,4 +101,8 @@ public class SearchBusinessAdapter extends RecyclerView.Adapter<RollerListAdapte
         return mDataset.size();
     }
 
+    protected void launchWebsite(String url, View v) {
+        Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        v.getContext().startActivity(webIntent);
+    }
 }

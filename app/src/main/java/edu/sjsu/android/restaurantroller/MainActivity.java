@@ -32,10 +32,12 @@ import android.widget.TabHost;
 import android.widget.Toast;
 
 import com.yelp.fusion.client.models.Business;
+import com.yelp.fusion.client.models.Category;
 import com.yelp.fusion.client.models.SearchResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
 
 import retrofit2.Response;
@@ -67,17 +69,19 @@ public class MainActivity extends MainActionBarActivity {
     // Roller Tab variables
     private RecyclerView rollerRecyclerView;
     private RecyclerView.Adapter rollerAdapter;
-    private RecyclerView.LayoutManager layoutManager;
+    private RecyclerView.LayoutManager rollerLayoutManager;
     private ArrayList<Restaurant> restaurantList;
     private Button addRestaurantBtn, rollRestaurantsBtn;
 
     // Favorites Tab variables
     private RecyclerView favoriteRecyclerView;
     private RecyclerView.Adapter favoriteAdapter;
+    private RecyclerView.LayoutManager favoriteLayoutManager;
 
     // Search Results Tab variables
     private RecyclerView  resultsRecyclerView;
-    private RecyclerView.Adapter resulsAdapter;
+    private RecyclerView.Adapter resultsAdapter;
+    private RecyclerView.LayoutManager resultsLayoutManager;
 
     // Search Results Tab variables
     private RestaurantData restaurantData;
@@ -114,7 +118,7 @@ public class MainActivity extends MainActionBarActivity {
         // and use insert method of Restaurant Data
         restaurantData = new RestaurantData(getApplication());
 
-        layoutManager = new LinearLayoutManager(this);
+
         setUpRollerTab(savedInstanceState);
         setUpFavoritesTab(savedInstanceState);
         setUpResultsTab(savedInstanceState);
@@ -139,13 +143,14 @@ public class MainActivity extends MainActionBarActivity {
         // Roller Tab Setup
         rollerRecyclerView = (RecyclerView) findViewById(R.id.roller_recycler_view);
         rollerRecyclerView.setHasFixedSize(true);
-        rollerRecyclerView.setLayoutManager(layoutManager);
+        rollerLayoutManager = new LinearLayoutManager(this);
+        rollerRecyclerView.setLayoutManager(rollerLayoutManager);
 
         // DUMMY DATA
         restaurantList = new ArrayList<Restaurant>();
-        restaurantList.add(new YelpRestaurant("dddddddddddddddddddddddddddd", 1.0, 24, 40000, "test1IconUrl", "testurl"));
-        restaurantList.add(new YelpRestaurant("test 2", 4.0, 583, 29, "test2IconUrl", "testurl"));
-        restaurantList.add(new Restaurant("personal"));
+        restaurantList.add(new YelpRestaurant("dddddddddddddddddddddddddddd", 1.0, 24, 40000, "test1IconUrl", "testurl", new TreeSet<String>()));
+        restaurantList.add(new YelpRestaurant("test 2", 4.0, 583, 29, "test2IconUrl", "testurl", new TreeSet<String>()));
+        restaurantList.add(new Restaurant("personal", new TreeSet<String>()));
         rollerAdapter = new RollerListAdapter(restaurantList);
         rollerRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         rollerRecyclerView.setAdapter(rollerAdapter);
@@ -170,14 +175,16 @@ public class MainActivity extends MainActionBarActivity {
 
     private void setUpFavoritesTab(Bundle savedInstanceState){
         favoriteRecyclerView = findViewById(R.id.favorites_recycler_view);
-        //favoriteRecyclerView.setLayoutManager(layoutManager);
+        favoriteLayoutManager = new LinearLayoutManager(this);
+        favoriteRecyclerView.setLayoutManager(favoriteLayoutManager);
 
 
     }
 
     private void setUpResultsTab(Bundle savedInstanceState){
         resultsRecyclerView = findViewById(R.id.search_result_recycler_view);
-        //resultsRecyclerView.setLayoutManager(layoutManager);
+        resultsLayoutManager = new LinearLayoutManager(this);
+        resultsRecyclerView.setLayoutManager(resultsLayoutManager);
     }
 
     private void setUpSearchTab(Bundle savedInstanceState){
@@ -283,22 +290,18 @@ public class MainActivity extends MainActionBarActivity {
 
     protected void onQueryFinish(Response<SearchResponse> r){
         Log.i("asyncro response", r.toString());
-        tabs.setCurrentTab(0);
+        tabs.setCurrentTab(2);
         ArrayList<Business> bis = r.body().getBusinesses();
-        ArrayList<Restaurant> t = new ArrayList<>();
+        ArrayList<Business> filteredList = new ArrayList<>();
         for(Business b: bis){
             double rating = b.getRating();
             if(rating >= (ratingSeekBar.getProgress() + 2)/ 2.0) {
-                String url = b.getImageUrl().replaceAll("o\\.jpg", "ms.jpg");
-
-                // NEED TO REPLACE WITH ACTUAL WEBSITE URL
-                YelpRestaurant w = new YelpRestaurant(b.getName(), rating, b.getReviewCount(), b.getDistance(), url, "REPLACE THIS");
-                t.add(w);
+                filteredList.add(b);
             }
         }
-        rollerAdapter = new RollerListAdapter(t);
-        rollerRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
-        rollerRecyclerView.setAdapter(rollerAdapter);
+        resultsAdapter = new SearchBusinessAdapter(filteredList);
+        resultsRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
+        resultsRecyclerView.setAdapter(resultsAdapter);
     }
 
     public void rollRestaurants(View view){
