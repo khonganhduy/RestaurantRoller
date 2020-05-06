@@ -44,6 +44,7 @@ import retrofit2.Response;
 
 public class MainActivity extends MainActionBarActivity {
     protected static final int QUERY_FINISHED = 1;
+    protected static final int QUERY_FAILED = 2;
     public static final int MIN_WEIGHT = 1;
     public static final String RESTAURANT_NAME_KEY = "restaurant_name";
     public static final String RESTAURANT_WEIGHT_KEY = "restaurant_weight";
@@ -52,7 +53,7 @@ public class MainActivity extends MainActionBarActivity {
     public static final String RESTAURANT_RATING_COUNT_KEY = "restaurant_rating_count";
     public static final String RESTAURANT_DISTANCE_KEY = "restaurant_distance";
 
-
+    protected static ArrayList<Restaurant> rollerList = new ArrayList<>();
     // Buttons
 
 
@@ -101,6 +102,9 @@ public class MainActivity extends MainActionBarActivity {
             switch(inputMessage.what){
                 case QUERY_FINISHED:
                     onQueryFinish((Response<SearchResponse>)inputMessage.obj);
+                    break;
+                case QUERY_FAILED:
+                    Log.i("Timeout", "Connection Timed Out");
                     break;
             }
         }

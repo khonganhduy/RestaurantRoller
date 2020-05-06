@@ -2,6 +2,7 @@ package edu.sjsu.android.restaurantroller;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 import com.yelp.fusion.client.models.Business;
+import com.yelp.fusion.client.models.Category;
 
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 public class SearchBusinessAdapter extends RecyclerView.Adapter<SearchBusinessAdapter.SearchBusinessViewHolder> {
 
-    private ArrayList<Business> mDataset;
+    private ArrayList<Restaurant> mDataset;
 
 
     public static class SearchBusinessViewHolder extends RecyclerView.ViewHolder {
@@ -29,7 +32,6 @@ public class SearchBusinessAdapter extends RecyclerView.Adapter<SearchBusinessAd
         private Button addRemoveBtn;
         private ImageButton yelpLaunch;
         private ImageView ratingIcon, restaurantIcon;
-
         public SearchBusinessViewHolder(View v) {
             super(v);
             view = v;
@@ -45,11 +47,21 @@ public class SearchBusinessAdapter extends RecyclerView.Adapter<SearchBusinessAd
 
             addRemoveBtn = (Button) v.findViewById(R.id.add_remove_button);
         }
+
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public SearchBusinessAdapter(ArrayList<Business> myDataset) {
-        mDataset = myDataset;
+        ArrayList<Restaurant> dataSet = new ArrayList<>();
+        for (Business b: myDataset)
+        {
+            TreeSet<String> tags = new TreeSet();
+            for(Category c: b.getCategories())
+                tags.add(c.getAlias());
+            Restaurant r = new Restaurant(b, tags);
+            dataSet.add(r);
+        }
+        mDataset = dataSet;
     }
 
     @Override
@@ -72,7 +84,9 @@ public class SearchBusinessAdapter extends RecyclerView.Adapter<SearchBusinessAd
         holder.yelpLaunch.setVisibility(View.VISIBLE);
         holder.restaurantIcon.setVisibility(View.VISIBLE);
 
-        Business b = mDataset.get(position);
+        Restaurant r = mDataset.get(position);
+        Business b = r.getBusinessSource();
+
         holder.nameTextView.setText(b.getName());
 
         View.OnClickListener launchWeb = view -> launchWebsite(b.getUrl(), holder.view);
@@ -85,12 +99,20 @@ public class SearchBusinessAdapter extends RecyclerView.Adapter<SearchBusinessAd
         holder.ratingIcon.setImageResource(holder.view.getResources().getIdentifier(rating, "drawable", "edu.sjsu.android.restaurantroller"));
         holder.distanceView.setText(String.format("%.2f", YelpHelper.metersToMiles(b.getDistance())) + " mi");
 
-        holder.addRemoveBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+        holder.addRemoveBtn.setOnClickListener(view -> {
 
-                    }
-                }
+                String check = r.inRoller() ? "Remove from": "Add to";
+                holder.addRemoveBtn.setText(check + " Roll");
+
+                if(r.inRoller())
+                    MainActivity.rollerList.remove(r);
+                else
+                    MainActivity.rollerList.add(r);
+                r.setInRoller(!r.inRoller());
+                Log.i("checking", MainActivity.rollerList.toString());
+                notifyDataSetChanged();
+
+            }
         );
 
     }
