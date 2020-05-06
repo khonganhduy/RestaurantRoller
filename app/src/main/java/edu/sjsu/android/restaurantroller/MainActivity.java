@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -249,5 +251,11 @@ public class MainActivity extends MainActionBarActivity {
         rollerAdapter = new RollerListAdapter(t);
         rollerRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         rollerRecyclerView.setAdapter(rollerAdapter);
+    }
+
+    //make sure in format of "http://example.com"
+    protected void launchWebsite(String url){
+        Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(webIntent);
     }
 }
