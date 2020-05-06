@@ -27,7 +27,6 @@ import com.yelp.fusion.client.models.Business;
 import com.yelp.fusion.client.models.SearchResponse;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -37,23 +36,30 @@ public class MainActivity extends MainActionBarActivity {
     protected static final int QUERY_FINISHED = 1;
 
     // Buttons
-    private Button addRestaurantBtn;
-    private Button rollRestaurantsBtn;
+
 
     // Object to pull/put data from database
-    private RestaurantData restaurantData;
+
 
     // Start labelling instance variables to the subtab they correlate to
     private TabHost tabs;
 
     // Roller Tab variables
-    private RecyclerView restaurantRecyclerView;
-    private RecyclerView.Adapter restaurantAdapter;
+    private RecyclerView rollerRecyclerView;
+    private RecyclerView.Adapter rollerAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<WeightedRestaurant> restaurantList;
-    //private ArrayList<String> restaurantList;
+    private Button addRestaurantBtn, rollRestaurantsBtn;
+
+    // Favorites Tab variables
+    private RecyclerView favoriteRecyclerView;
+    private RecyclerView.Adapter favoriteAdapter;
+
+    // Search Results Tab variables
+    private RestaurantData restaurantData;
+
     // Search Tab variables
-    private LinearLayout optionsTab;
+    private LinearLayout searchTab;
     private EditText searchTermText, searchRadiusText;
     private ThumbTextSeekBar ratingSeekBar;
     private Button searchButton;
@@ -83,29 +89,32 @@ public class MainActivity extends MainActionBarActivity {
         restaurantData = new RestaurantData(getApplication());
 
 
-        // Tab Setup Here
+        // Main Tab Setup Here
         tabs = (TabHost) findViewById(R.id.tabhost);
         tabs.setup();
-        TabHost.TabSpec spec = tabs.newTabSpec("roller").setContent(R.id.restaurantsTab).setIndicator("Roll");
+        TabHost.TabSpec spec = tabs.newTabSpec("roller").setContent(R.id.roller_tab).setIndicator("Roll");
         tabs.addTab(spec);
-        TabHost.TabSpec spec2 = tabs.newTabSpec("saved").setContent(R.id.favoritesTab).setIndicator("Favorites");
+        TabHost.TabSpec spec2 = tabs.newTabSpec("favorites").setContent(R.id.favorites_lists_tab).setIndicator("Favorite");
         tabs.addTab(spec2);
-        TabHost.TabSpec spec3 = tabs.newTabSpec("options").setContent(R.id.optionsTab).setIndicator("Search");
+        TabHost.TabSpec spec3 = tabs.newTabSpec("search results").setContent(R.id.search_result_lists_tab).setIndicator("Search Results");
         tabs.addTab(spec3);
+        TabHost.TabSpec spec4 = tabs.newTabSpec("search").setContent(R.id.search_tab).setIndicator("Search");
+        tabs.addTab(spec4);
+
 
         // Roller Tab Setup
-        restaurantRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        restaurantRecyclerView.setHasFixedSize(true);
+        rollerRecyclerView = (RecyclerView) findViewById(R.id.roller_recycler_view);
+        rollerRecyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        restaurantRecyclerView.setLayoutManager(layoutManager);
+        rollerRecyclerView.setLayoutManager(layoutManager);
 
         // DUMMY DATA
         restaurantList = new ArrayList<WeightedRestaurant>();
         restaurantList.add(new WeightedRestaurant("dddddddddddddddddddddddddddd", 1.0, 24, 40000, "test1IconUrl"));
         restaurantList.add(new WeightedRestaurant("test 2", 4.0, 583, 29, "test2IconUrl"));
-        restaurantAdapter = new RestaurantListAdapter(restaurantList);
-        restaurantRecyclerView.addItemDecoration(new DividerItemDecoration(restaurantRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
-        restaurantRecyclerView.setAdapter(restaurantAdapter);
+        rollerAdapter = new RollerListAdapter(restaurantList);
+        rollerRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
+        rollerRecyclerView.setAdapter(rollerAdapter);
 
         // Creates fragment to add a restaurant
         addRestaurantBtn = findViewById(R.id.add_restaurant_btn);
@@ -130,8 +139,8 @@ public class MainActivity extends MainActionBarActivity {
 
 
         // Search Tab Setup
-        optionsTab = findViewById(R.id.optionsTab);
-        optionsTab.setOnFocusChangeListener((view, b) -> {
+        searchTab = findViewById(R.id.search_tab);
+        searchTab.setOnFocusChangeListener((view, b) -> {
             if(b){
                 InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -141,7 +150,7 @@ public class MainActivity extends MainActionBarActivity {
         searchTermText = findViewById(R.id.searchTerm);
         searchTermText.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                optionsTab.requestFocus();
+                searchTab.requestFocus();
             }
             return false;
         });
@@ -151,14 +160,11 @@ public class MainActivity extends MainActionBarActivity {
         searchRadiusText.setOnFocusChangeListener((view, b) -> searchRadiusText.setCursorVisible(b));
 
         ratingSeekBar = (ThumbTextSeekBar) findViewById(R.id.ratingBar);
-        ratingSeekBar.setThumbText("None");
+        ratingSeekBar.setThumbText("1.0");
         ratingSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-                if(progress == 0)
-                    ratingSeekBar.setThumbText("None");
-                else
-                    ratingSeekBar.setThumbText(String.format( "%.1f", (progress + 1)/2.0));
+                    ratingSeekBar.setThumbText(String.format( "%.1f", (progress + 2)/2.0));
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -225,13 +231,15 @@ public class MainActivity extends MainActionBarActivity {
         ArrayList<Business> bis = r.body().getBusinesses();
         ArrayList<WeightedRestaurant> t = new ArrayList<>();
         for(Business b: bis){
-            String url = b.getImageUrl().replaceAll("o\\.jpg", "ms.jpg");
-            Log.i("Image testing", url);
-            WeightedRestaurant w = new WeightedRestaurant(b.getName(), b.getRating(), b.getReviewCount(), b.getDistance(), url);
-            t.add(w);
+            double rating = b.getRating();
+            if(rating >= (ratingSeekBar.getProgress() + 2)/ 2.0) {
+                String url = b.getImageUrl().replaceAll("o\\.jpg", "ms.jpg");
+                WeightedRestaurant w = new WeightedRestaurant(b.getName(), rating, b.getReviewCount(), b.getDistance(), url);
+                t.add(w);
+            }
         }
-        restaurantAdapter = new RestaurantListAdapter(t);
-        restaurantRecyclerView.addItemDecoration(new DividerItemDecoration(restaurantRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
-        restaurantRecyclerView.setAdapter(restaurantAdapter);
+        rollerAdapter = new RollerListAdapter(t);
+        rollerRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
+        rollerRecyclerView.setAdapter(rollerAdapter);
     }
 }

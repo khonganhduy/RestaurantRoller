@@ -22,12 +22,14 @@
                 android:layout_height="0dip"
                 android:layout_weight="1">
 
-                <include layout="@layout/activity_restaurant_list"
-                    android:id="@+id/restaurantsTab"/>
-                <include layout="@layout/activity_favorite_list"
-                    android:id="@+id/favoritesTab"/>
+                <include layout="@layout/activity_roller"
+                    android:id="@+id/roller_tab"/>
+                <include layout="@layout/activity_favorite_lists"
+                    android:id="@+id/favorites_lists_tab"/>
+                <include layout="@layout/activity_search_result_list"
+                    android:id="@+id/search_result_lists_tab"/>
                 <include layout="@layout/activity_search"
-                    android:id="@+id/optionsTab"/>
+                    android:id="@+id/search_tab"/>
             </FrameLayout>
 
             <TabWidget
