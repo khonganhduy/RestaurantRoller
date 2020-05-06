@@ -78,6 +78,7 @@ public class MainActivity extends MainActionBarActivity {
     private RecyclerView favoriteRecyclerView;
     private RecyclerView.Adapter favoriteAdapter;
     private RecyclerView.LayoutManager favoriteLayoutManager;
+    private Button addFavoriteRestaurantBtn, deleteModeBtn;
 
     // Search Results Tab variables
     private RecyclerView  resultsRecyclerView;
@@ -181,8 +182,35 @@ public class MainActivity extends MainActionBarActivity {
         favoriteRecyclerView = findViewById(R.id.favorites_recycler_view);
         favoriteLayoutManager = new LinearLayoutManager(this);
         favoriteRecyclerView.setLayoutManager(favoriteLayoutManager);
+        addFavoriteRestaurantBtn = findViewById(R.id.add_restaurant_btn);
+        addFavoriteRestaurantBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                AddRestaurantFragment dialogFragment = new AddRestaurantFragment();
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                dialogFragment.show(activity.getSupportFragmentManager(), "editText");
+                // TODO pull data from fragment to create a personal restaurant object
 
+                //To insert into db, will require String restaurantName and Iterable tags
+                /* WILL MODIFY WHEN DATA RETRIEVAL IMPLEMENTED
+                for(String tag: tags){
+                    restaurantData.insert(new RestaurantEntity(restaurantName, tag);
+                }
+                 */
+            }
+        });
+        deleteModeBtn = findViewById(R.id.delete_mode_btn);
+        deleteModeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO implement removal functionality of restaurant
 
+                /* WILL MODIFY WHEN DATA SELECTION IMPLEMENTED
+                restaurantData.deleteAllByName(restaurantName);
+                 */
+            }
+        });
+        favoriteRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
     }
 
     private void setUpResultsTab(Bundle savedInstanceState){
