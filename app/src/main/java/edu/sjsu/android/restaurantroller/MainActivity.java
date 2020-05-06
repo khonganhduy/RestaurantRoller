@@ -129,8 +129,8 @@ public class MainActivity extends MainActionBarActivity {
 
         // DUMMY DATA
         restaurantList = new ArrayList<Restaurant>();
-        restaurantList.add(new YelpRestaurant("dddddddddddddddddddddddddddd", 1.0, 24, 40000, "test1IconUrl"));
-        restaurantList.add(new YelpRestaurant("test 2", 4.0, 583, 29, "test2IconUrl"));
+        restaurantList.add(new YelpRestaurant("dddddddddddddddddddddddddddd", 1.0, 24, 40000, "test1IconUrl", "testurl"));
+        restaurantList.add(new YelpRestaurant("test 2", 4.0, 583, 29, "test2IconUrl", "testurl"));
         restaurantList.add(new Restaurant("personal"));
         rollerAdapter = new RollerListAdapter(restaurantList);
         rollerRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
@@ -252,7 +252,9 @@ public class MainActivity extends MainActionBarActivity {
             double rating = b.getRating();
             if(rating >= (ratingSeekBar.getProgress() + 2)/ 2.0) {
                 String url = b.getImageUrl().replaceAll("o\\.jpg", "ms.jpg");
-                YelpRestaurant w = new YelpRestaurant(b.getName(), rating, b.getReviewCount(), b.getDistance(), url);
+
+                // NEED TO REPLACE WITH ACTUAL WEBSITE URL
+                YelpRestaurant w = new YelpRestaurant(b.getName(), rating, b.getReviewCount(), b.getDistance(), url, "REPLACE THIS");
                 t.add(w);
             }
         }
