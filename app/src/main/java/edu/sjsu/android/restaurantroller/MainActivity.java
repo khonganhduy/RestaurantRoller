@@ -101,7 +101,7 @@ public class MainActivity extends MainActionBarActivity {
 
         // DUMMY DATA
         restaurantList = new ArrayList<WeightedRestaurant>();
-        restaurantList.add(new WeightedRestaurant("test 1", 1.0, 24, 40000, "test1IconUrl"));
+        restaurantList.add(new WeightedRestaurant("dddddddddddddddddddddddddddd", 1.0, 24, 40000, "test1IconUrl"));
         restaurantList.add(new WeightedRestaurant("test 2", 4.0, 583, 29, "test2IconUrl"));
         restaurantAdapter = new RestaurantListAdapter(restaurantList);
         restaurantRecyclerView.addItemDecoration(new DividerItemDecoration(restaurantRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
