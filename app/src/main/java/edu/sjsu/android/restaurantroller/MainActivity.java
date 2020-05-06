@@ -278,20 +278,29 @@ public class MainActivity extends MainActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if(locationFinder == null) {
-            locationFinder = new LocationFinder(MainActivity.this);
+        if(checkPermission()) {
+            if (locationFinder == null) {
+                locationFinder = new LocationFinder(MainActivity.this);
+            }
+            locationFinder.stopUsingGPS();
         }
-        locationFinder.stopUsingGPS();
+        else{
+            requestPermission();
+        }
     }
 
     @Override
     protected void onResume(){
         super.onResume();
-        if(locationFinder == null) {
-            locationFinder = new LocationFinder(MainActivity.this);
+        if(checkPermission()) {
+            if (locationFinder == null) {
+                locationFinder = new LocationFinder(MainActivity.this);
+            } else {
+                locationFinder.reenableGPS();
+            }
         }
-        else {
-            locationFinder.reenableGPS();
+        else{
+            requestPermission();
         }
     }
 
