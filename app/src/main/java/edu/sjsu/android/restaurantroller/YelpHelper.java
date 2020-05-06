@@ -143,4 +143,8 @@ public class YelpHelper {
     public static int milesToMeters(double miles){
         return (int) (miles * 1609.34);
     }
+
+    public static double metersToMiles(double meters){
+        return (meters / 1609.34);
+    }
 }

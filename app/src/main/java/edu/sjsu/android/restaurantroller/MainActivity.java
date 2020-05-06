@@ -23,9 +23,11 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TabHost;
 
+import com.yelp.fusion.client.models.Business;
 import com.yelp.fusion.client.models.SearchResponse;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -90,8 +92,8 @@ public class MainActivity extends MainActionBarActivity {
 
         // DUMMY DATA
         restaurantList = new ArrayList<WeightedRestaurant>();
-        restaurantList.add(new WeightedRestaurant("test 1"));
-        restaurantList.add(new WeightedRestaurant("test 2"));
+        restaurantList.add(new WeightedRestaurant("test 1", 1.0, 24, 40000, "test1IconUrl"));
+        restaurantList.add(new WeightedRestaurant("test 2", 4.0, 583, 29, "test2IconUrl"));
         restaurantAdapter = new RestaurantListAdapter(restaurantList);
         restaurantRecyclerView.addItemDecoration(new DividerItemDecoration(restaurantRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         restaurantRecyclerView.setAdapter(restaurantAdapter);
@@ -205,13 +207,22 @@ public class MainActivity extends MainActionBarActivity {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-
         });
     }
 
     protected void onQueryFinish(Response<SearchResponse> r){
         Log.i("asyncro response", r.toString());
         tabs.setCurrentTab(0);
+        ArrayList<Business> bis = r.body().getBusinesses();
+        ArrayList<WeightedRestaurant> t = new ArrayList<>();
+        for(Business b: bis){
+            String url = b.getImageUrl().replaceAll("o\\.jpg", "ms.jpg");
+            Log.i("Image testing", url);
+            WeightedRestaurant w = new WeightedRestaurant(b.getName(), b.getRating(), b.getReviewCount(), b.getDistance(), url);
+            t.add(w);
+        }
+        restaurantAdapter = new RestaurantListAdapter(t);
+        restaurantRecyclerView.addItemDecoration(new DividerItemDecoration(restaurantRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
+        restaurantRecyclerView.setAdapter(restaurantAdapter);
     }
 }
