@@ -40,6 +40,9 @@ public class MainActivity extends MainActionBarActivity {
     private Button addRestaurantBtn;
     private Button rollRestaurantsBtn;
 
+    // Object to pull/put data from database
+    private RestaurantData restaurantData;
+
     // Start labelling instance variables to the subtab they correlate to
     private TabHost tabs;
 
@@ -73,6 +76,12 @@ public class MainActivity extends MainActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Use this variable to add or remove stuff from the database
+        // to insert, make a new RestaurantEntity using RestaurantEntity(String name, String tag)
+        // and use insert method of Restaurant Data
+        restaurantData = new RestaurantData(getApplication());
+
 
         // Tab Setup Here
         tabs = (TabHost) findViewById(R.id.tabhost);
