@@ -12,8 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/distance_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/add_remove_button"
+            android:layout_centerVertical="true"
+            android:layout_marginHorizontal="10dp"
+            android:text="0 mi" />
         <Button
-            android:id="@+id/addRemoveButton"
+            android:id="@+id/add_remove_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="?attr/selectableItemBackgroundBorderless"

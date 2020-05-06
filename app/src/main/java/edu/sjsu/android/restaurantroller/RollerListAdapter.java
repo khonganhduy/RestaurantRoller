@@ -85,6 +85,7 @@ public class RollerListAdapter extends RecyclerView.Adapter<RollerListAdapter.Ro
             holder.ratingIcon.setVisibility(View.VISIBLE);
             holder.distanceView.setVisibility(View.VISIBLE);
             holder.yelpLaunch.setVisibility(View.VISIBLE);
+            holder.restaurantIcon.setVisibility(View.VISIBLE);
 
             View.OnClickListener launchWeb = view -> launchWebsite(yelpRestaurant.getWebsiteURL(), holder.view);
             Picasso.get().load(yelpRestaurant.getImageURL()).into(holder.restaurantIcon);
@@ -95,7 +96,6 @@ public class RollerListAdapter extends RecyclerView.Adapter<RollerListAdapter.Ro
             String rating = "stars" + Double.toString(yelpRestaurant.getRating()).replaceAll("\\.", "");
             holder.ratingIcon.setImageResource(holder.view.getResources().getIdentifier(rating, "drawable", "edu.sjsu.android.restaurantroller"));
             holder.distanceView.setText(String.format("%.2f",YelpHelper.metersToMiles(yelpRestaurant.getDistance())) + " mi");
-            Picasso.get().load(yelpRestaurant.getImageURL()).into(holder.restaurantIcon);
         }
 
 

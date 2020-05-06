@@ -17,7 +17,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/tags_line"
+        android:id="@+id/tags_text"
         android:layout_width="400dp"
         android:layout_height="wrap_content"
         android:layout_alignWithParentIfMissing="true"
@@ -29,7 +29,7 @@
         android:textSize="14sp" />
 
     <Button
-        android:id="@+id/addRemoveButton"
+        android:id="@+id/add_remove_button_favorite"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:text="Add to roll"
