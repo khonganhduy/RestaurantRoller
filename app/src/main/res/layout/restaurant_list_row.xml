@@ -20,7 +20,7 @@
 
         <TextView
             android:id="@+id/first_line"
-            android:layout_width="wrap_content"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:layout_alignWithParentIfMissing="true"
             android:layout_alignParentTop="true"
@@ -62,7 +62,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="4dp"
             android:layout_below="@id/first_line"
-            android:layout_toRightOf="@id/ratingIcon"
+            android:layout_toRightOf="@id/rating_icon"
             android:scaleType="fitCenter"
             android:background="@android:color/transparent"
             android:src="@drawable/yelp_logo"/>
