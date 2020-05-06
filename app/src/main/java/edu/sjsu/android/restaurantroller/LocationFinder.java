@@ -76,8 +76,10 @@ public class LocationFinder extends Service implements LocationListener {
                 }
             }
         } catch (SecurityException se){
+            Toast.makeText(mContext, "Permission error in location services", Toast.LENGTH_LONG).show();
             se.printStackTrace();
         } catch (Exception e){
+            Toast.makeText(mContext, "Error in location services", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
         return location;
@@ -115,7 +117,7 @@ public class LocationFinder extends Service implements LocationListener {
                     MIN_DISTANCE_CHANGE_FOR_UPDATES, LocationFinder.this);
         }
         catch(SecurityException e){
-            e.printStackTrace();
+            Toast.makeText(mContext, "Permission error in location services", Toast.LENGTH_LONG).show();
         }
     }
 

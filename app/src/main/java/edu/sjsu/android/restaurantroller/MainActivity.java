@@ -240,14 +240,15 @@ public class MainActivity extends MainActionBarActivity {
         try {
             YelpHelper yelp = new YelpHelper(this);
         } catch (IOException e) {
-            e.printStackTrace(); // TODO show toast on exception
+            Toast.makeText(this,"YelpHelper error",Toast.LENGTH_LONG).show();
         }
 
         searchButton = (Button) findViewById(R.id.searchButton);
         searchButton.setOnClickListener(view -> {
+            Location location = obtainLocation();
             YelpHelper.YelpQueryBuilder query = new YelpHelper.YelpQueryBuilder()
                     .setMinMaxPrice(minSpinner.getSelectedItemPosition() + 1, maxSpinner.getSelectedItemPosition() + 1)
-                    .setLatLong(37.4256019322,-121.910018101); // TODO get GPS coordinates and shove them here
+                    .setLatLong(location.getLatitude(),location.getLongitude());
             String term = searchTermText.getText().toString();
             if(!term.isEmpty())
                 query.setSearchTerm(term);
@@ -260,8 +261,10 @@ public class MainActivity extends MainActionBarActivity {
             try {
                 YelpHelper.YelpQuery runningQuery = query.executeQuery(handler);
             } catch (ExecutionException e) {
-                e.printStackTrace(); // TODO Show toasts on exceptions
+                Toast.makeText(this,"Yelp querying error", Toast.LENGTH_LONG).show();
+                e.printStackTrace();
             } catch (InterruptedException e) {
+                Toast.makeText(this,"Yelp querying error", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
         });
