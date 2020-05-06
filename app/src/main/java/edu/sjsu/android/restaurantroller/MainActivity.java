@@ -129,6 +129,7 @@ public class MainActivity extends MainActionBarActivity {
         restaurantList = new ArrayList<Restaurant>();
         restaurantList.add(new YelpRestaurant("dddddddddddddddddddddddddddd", 1.0, 24, 40000, "test1IconUrl"));
         restaurantList.add(new YelpRestaurant("test 2", 4.0, 583, 29, "test2IconUrl"));
+        restaurantList.add(new Restaurant("personal"));
         rollerAdapter = new RollerListAdapter(restaurantList);
         rollerRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         rollerRecyclerView.setAdapter(rollerAdapter);
