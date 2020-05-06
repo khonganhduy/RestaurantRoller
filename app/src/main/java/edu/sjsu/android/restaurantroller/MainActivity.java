@@ -83,12 +83,20 @@ public class MainActivity extends MainActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setupTabs(savedInstanceState);
+
         // Use this variable to add or remove stuff from the database
         // to insert, make a new RestaurantEntity using RestaurantEntity(String name, String tag)
         // and use insert method of Restaurant Data
         restaurantData = new RestaurantData(getApplication());
 
+        setUpRollerTab(savedInstanceState);
+        setUpFavoritesTab(savedInstanceState);
+        setUpResultsTab(savedInstanceState);
+        setUpSearchTab(savedInstanceState);
+    }
 
+    private void setupTabs(Bundle savedInstanceState){
         // Main Tab Setup Here
         tabs = (TabHost) findViewById(R.id.tabhost);
         tabs.setup();
@@ -100,8 +108,9 @@ public class MainActivity extends MainActionBarActivity {
         tabs.addTab(spec3);
         TabHost.TabSpec spec4 = tabs.newTabSpec("search").setContent(R.id.search_tab).setIndicator("Search");
         tabs.addTab(spec4);
+    }
 
-
+    private void setUpRollerTab(Bundle savedInstanceState){
         // Roller Tab Setup
         rollerRecyclerView = (RecyclerView) findViewById(R.id.roller_recycler_view);
         rollerRecyclerView.setHasFixedSize(true);
@@ -132,28 +141,30 @@ public class MainActivity extends MainActionBarActivity {
                 int[] weights = new int[restaurantList.size()];
                 for (int i = 0; i < weights.length; i++){
                     weights[i] = restaurantList.get(i).getWeight();
-                }
+                } }});
+    }
 
-            }
-        });
+    private void setUpFavoritesTab(Bundle savedInstanceState){
 
+    }
 
+    private void setUpResultsTab(Bundle savedInstanceState){
+
+    }
+
+    private void setUpSearchTab(Bundle savedInstanceState){
         // Search Tab Setup
         searchTab = findViewById(R.id.search_tab);
         searchTab.setOnFocusChangeListener((view, b) -> {
             if(b){
                 InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            }
-        });
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0); }});
 
         searchTermText = findViewById(R.id.searchTerm);
         searchTermText.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                searchTab.requestFocus();
-            }
-            return false;
-        });
+                searchTab.requestFocus(); }
+            return false; });
 
         searchRadiusText = (EditText) findViewById(R.id.radiusValue);
         searchRadiusText.setFilters(new InputFilter[]{new InputFilterMinMax(0,25), new InputFilter.LengthFilter(4)});
@@ -164,7 +175,7 @@ public class MainActivity extends MainActionBarActivity {
         ratingSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-                    ratingSeekBar.setThumbText(String.format( "%.1f", (progress + 2)/2.0));
+                ratingSeekBar.setThumbText(String.format( "%.1f", (progress + 2)/2.0));
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -201,9 +212,7 @@ public class MainActivity extends MainActionBarActivity {
         searchButton.setOnClickListener(view -> {
             YelpHelper.YelpQueryBuilder query = new YelpHelper.YelpQueryBuilder()
                     .setMinMaxPrice(minSpinner.getSelectedItemPosition() + 1, maxSpinner.getSelectedItemPosition() + 1)
-
                     .setLatLong(37.4256019322,-121.910018101); // TODO get GPS coordinates and shove them here
-
             String term = searchTermText.getText().toString();
             if(!term.isEmpty())
                 query.setSearchTerm(term);
@@ -213,8 +222,6 @@ public class MainActivity extends MainActionBarActivity {
             int rating = ratingSeekBar.getProgress();
             if(rating > 0)
                 query.setRatingMin(rating);
-
-
             try {
                 YelpHelper.YelpQuery runningQuery = query.executeQuery(handler);
             } catch (ExecutionException e) {
@@ -224,6 +231,7 @@ public class MainActivity extends MainActionBarActivity {
             }
         });
     }
+
 
     protected void onQueryFinish(Response<SearchResponse> r){
         Log.i("asyncro response", r.toString());
