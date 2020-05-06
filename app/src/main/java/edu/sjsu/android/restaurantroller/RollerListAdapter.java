@@ -95,7 +95,6 @@ public class RollerListAdapter extends RecyclerView.Adapter<RollerListAdapter.Ro
         holder.rollWeightView.setText(String.valueOf(restaurant.getWeight()));
 
 
-
         // Changes weight when chevrons are clicked
         holder.increaseWeight.setOnClickListener(new View.OnClickListener() {
             @Override
