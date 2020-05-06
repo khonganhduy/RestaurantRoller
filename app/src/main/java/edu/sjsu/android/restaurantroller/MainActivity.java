@@ -52,7 +52,7 @@ public class MainActivity extends MainActionBarActivity {
     public static final String RESTAURANT_RATING_COUNT_KEY = "restaurant_rating_count";
     public static final String RESTAURANT_DISTANCE_KEY = "restaurant_distance";
 
-
+    protected static ArrayList<Restaurant> rollerList = new ArrayList<>();
     // Buttons
 
 
