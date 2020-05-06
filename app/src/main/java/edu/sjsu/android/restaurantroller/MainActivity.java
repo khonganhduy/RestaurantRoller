@@ -1,12 +1,17 @@
 package edu.sjsu.android.restaurantroller;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import com.yelp.fusion.client.models.Business;
 import com.yelp.fusion.client.models.SearchResponse;
@@ -36,12 +42,24 @@ import retrofit2.Response;
 
 public class MainActivity extends MainActionBarActivity {
     protected static final int QUERY_FINISHED = 1;
+    public static final int MIN_WEIGHT = 1;
+    public static final String RESTAURANT_NAME_KEY = "restaurant_name";
+    public static final String RESTAURANT_WEIGHT_KEY = "restaurant_weight";
+    public static final String RESTAURANT_IMAGE_KEY = "restaurant_image";
+    public static final String RESTAURANT_RATING_KEY = "restaurant_rating";
+    public static final String RESTAURANT_RATING_COUNT_KEY = "restaurant_rating_count";
+    public static final String RESTAURANT_DISTANCE_KEY = "restaurant_distance";
+
 
     // Buttons
 
 
     // Object to pull/put data from database
 
+
+    // Location finder for latitude and longitude retrieval
+    private LocationFinder locationFinder;
+    private static final int PERMISSION_REQUEST_CODE = 3894;
 
     // Start labelling instance variables to the subtab they correlate to
     private TabHost tabs;
@@ -50,7 +68,7 @@ public class MainActivity extends MainActionBarActivity {
     private RecyclerView rollerRecyclerView;
     private RecyclerView.Adapter rollerAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private ArrayList<WeightedRestaurant> restaurantList;
+    private ArrayList<Restaurant> restaurantList;
     private Button addRestaurantBtn, rollRestaurantsBtn;
 
     // Favorites Tab variables
@@ -117,16 +135,17 @@ public class MainActivity extends MainActionBarActivity {
         tabs.addTab(spec4);
     }
 
-    private void setUpRollerTab(Bundle savedInstanceState){
+    private void setUpRollerTab(Bundle savedInstanceState) {
         // Roller Tab Setup
         rollerRecyclerView = (RecyclerView) findViewById(R.id.roller_recycler_view);
         rollerRecyclerView.setHasFixedSize(true);
         rollerRecyclerView.setLayoutManager(layoutManager);
 
         // DUMMY DATA
-        restaurantList = new ArrayList<WeightedRestaurant>();
-        restaurantList.add(new WeightedRestaurant("dddddddddddddddddddddddddddd", 1.0, 24, 40000, "test1IconUrl", "test1webUrl"));
-        restaurantList.add(new WeightedRestaurant("test 2", 4.0, 583, 29, "test2IconUrl", "test2webUrl"));
+        restaurantList = new ArrayList<Restaurant>();
+        restaurantList.add(new YelpRestaurant("dddddddddddddddddddddddddddd", 1.0, 24, 40000, "test1IconUrl", "testurl"));
+        restaurantList.add(new YelpRestaurant("test 2", 4.0, 583, 29, "test2IconUrl", "testurl"));
+        restaurantList.add(new Restaurant("personal"));
         rollerAdapter = new RollerListAdapter(restaurantList);
         rollerRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         rollerRecyclerView.setAdapter(rollerAdapter);
@@ -144,10 +163,9 @@ public class MainActivity extends MainActionBarActivity {
         rollRestaurantsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int[] weights = new int[restaurantList.size()];
-                for (int i = 0; i < weights.length; i++){
-                    weights[i] = restaurantList.get(i).getWeight();
-                } }});
+                rollRestaurants(view);
+            }
+        });
     }
 
     private void setUpFavoritesTab(Bundle savedInstanceState){
@@ -242,16 +260,31 @@ public class MainActivity extends MainActionBarActivity {
         });
     }
 
+    // Used to disable or enable GPS if the activity goes out of focus
+    @Override
+    protected void onPause() {
+        super.onPause();
+        locationFinder.stopUsingGPS();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        locationFinder.reenableGPS();
+    }
+
     protected void onQueryFinish(Response<SearchResponse> r){
         Log.i("asyncro response", r.toString());
         tabs.setCurrentTab(0);
         ArrayList<Business> bis = r.body().getBusinesses();
-        ArrayList<WeightedRestaurant> t = new ArrayList<>();
+        ArrayList<Restaurant> t = new ArrayList<>();
         for(Business b: bis){
             double rating = b.getRating();
             if(rating >= (ratingSeekBar.getProgress() + 2)/ 2.0) {
-                String iconUrl = b.getImageUrl().replaceAll("o\\.jpg", "ms.jpg");
-                WeightedRestaurant w = new WeightedRestaurant(b.getName(), rating, b.getReviewCount(), b.getDistance(), iconUrl, b.getUrl());
+                String url = b.getImageUrl().replaceAll("o\\.jpg", "ms.jpg");
+
+                // NEED TO REPLACE WITH ACTUAL WEBSITE URL
+                YelpRestaurant w = new YelpRestaurant(b.getName(), rating, b.getReviewCount(), b.getDistance(), url, "REPLACE THIS");
                 t.add(w);
             }
         }
@@ -260,9 +293,90 @@ public class MainActivity extends MainActionBarActivity {
         rollerRecyclerView.setAdapter(rollerAdapter);
     }
 
-    //make sure in format of "http://example.com"
+    public void rollRestaurants(View view){
+        Integer[] weights = new Integer[restaurantList.size()];
+        for (int i = 0; i < weights.length; i++){
+            weights[i] = restaurantList.get(i).getWeight();
+        }
+        Restaurant rolledRestaurant = restaurantList.get(new RollerUtility().rollWeighted(weights));
+        Bundle bundle = new Bundle();
+        bundle.putString(RESTAURANT_NAME_KEY, rolledRestaurant.getRestaurantName());
+        bundle.putInt(RESTAURANT_WEIGHT_KEY, rolledRestaurant.getWeight());
+        if (rolledRestaurant instanceof YelpRestaurant){
+            YelpRestaurant yelpRestaurant = (YelpRestaurant) rolledRestaurant;
+            bundle.putString(RESTAURANT_IMAGE_KEY, yelpRestaurant.getImageURL());
+            bundle.putDouble(RESTAURANT_RATING_KEY, yelpRestaurant.getRating());
+            bundle.putInt(RESTAURANT_RATING_COUNT_KEY, yelpRestaurant.getRatingCount());
+            bundle.putDouble(RESTAURANT_DISTANCE_KEY, yelpRestaurant.getDistance());
+        }
+        RollResultFragment dialogFragment = new RollResultFragment();
+        dialogFragment.setArguments(bundle);
+        AppCompatActivity activity = (AppCompatActivity) view.getContext();
+        dialogFragment.show(activity.getSupportFragmentManager(), "roll_restaurants");
+    }
+
+    // Website Launcher
+    // Make sure in format of "http://example.com"
     protected void launchWebsite(String url){
         Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(webIntent);
     }
+
+    // Method to obtain a location object which gives you the latitude and longitude
+    protected Location obtainLocation(){
+        Location myLocation = null;
+        if(checkPermission()) {
+            locationFinder = new LocationFinder(MainActivity.this);
+            if (locationFinder.canGetLocation()) {
+                myLocation = locationFinder.getLocation();
+            } else {
+                locationFinder.showSettingsAlert();
+            }
+        }
+        else{
+            requestPermission();
+        }
+        return myLocation;
+    }
+
+    // Permission methods for the Location services
+    private boolean checkPermission(){
+        int result = ContextCompat.checkSelfPermission(
+                MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION);
+        if(result == PackageManager.PERMISSION_GRANTED){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    private void requestPermission(){
+        if(ActivityCompat.shouldShowRequestPermissionRationale(
+                MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)){
+            Toast.makeText(MainActivity.this, "Location services permission",
+                    Toast.LENGTH_LONG).show();
+        }
+        else{
+            ActivityCompat.requestPermissions(
+                    MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    // Logs permission check results -- Body is not necessary
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults){
+        switch(requestCode){
+            case PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    Log.e("value","Permission Granted, Now you can use location services.");
+                }
+                else{
+                    Log.e("value", "Permission Denied, You cannot use location services.");
+                }
+                break;
+        }
+    }
+
+
 }

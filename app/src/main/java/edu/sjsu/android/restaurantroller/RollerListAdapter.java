@@ -19,7 +19,7 @@ import com.squareup.picasso.Picasso;
 
 public class RollerListAdapter extends RecyclerView.Adapter<RollerListAdapter.RollverViewHolder>{
 
-    private ArrayList<WeightedRestaurant> mDataset;
+    private ArrayList<Restaurant> mDataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -38,7 +38,6 @@ public class RollerListAdapter extends RecyclerView.Adapter<RollerListAdapter.Ro
             rollWeightView = (TextView) v.findViewById(R.id.roll_weight);
             increaseWeight = (ImageButton) v.findViewById(R.id.increase);
             decreaseWeight = (ImageButton) v.findViewById(R.id.decrease);
-
             yelpLaunch = (ImageButton) v.findViewById(R.id.yelp_button);
 
             ratingCountView = (TextView) v.findViewById(R.id.rating_count_text);
@@ -51,7 +50,7 @@ public class RollerListAdapter extends RecyclerView.Adapter<RollerListAdapter.Ro
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RollerListAdapter(ArrayList<WeightedRestaurant> myDataset) {
+    public RollerListAdapter(ArrayList<Restaurant> myDataset) {
         mDataset = myDataset;
     }
 
@@ -76,23 +75,28 @@ public class RollerListAdapter extends RecyclerView.Adapter<RollerListAdapter.Ro
     public void onBindViewHolder(RollverViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        WeightedRestaurant restaurant = mDataset.get(position);
+
+        Restaurant restaurant = mDataset.get(position);
         holder.nameTextView.setText(restaurant.getRestaurantName());
-
-        holder.ratingCountView.setText(restaurant.getRatingCount() + " reviews");
-        String rating = "stars" + Double.toString(restaurant.getRating()).replaceAll("\\.", "");
-        holder.ratingIcon.setImageResource(holder.view.getResources().getIdentifier(rating, "drawable", "edu.sjsu.android.restaurantroller"));
-
-        holder.distanceView.setText(String.format("%.2f",YelpHelper.metersToMiles(restaurant.getDistance())) + " mi");
-
-        View.OnClickListener launchWeb = view -> launchWebsite(restaurant.getWebsiteURL(), holder.view);
-        Picasso.get().load(restaurant.getImageURL()).into(holder.restaurantIcon);
-        holder.restaurantIcon.setOnClickListener(launchWeb);
-        holder.yelpLaunch.setOnClickListener(launchWeb);
-
-
-        // Set the weight of the restaurant
         holder.rollWeightView.setText(String.valueOf(restaurant.getWeight()));
+        if (mDataset.get(position) instanceof YelpRestaurant){
+            YelpRestaurant yelpRestaurant = (YelpRestaurant) restaurant;
+            holder.ratingCountView.setVisibility(View.VISIBLE);
+            holder.ratingIcon.setVisibility(View.VISIBLE);
+            holder.distanceView.setVisibility(View.VISIBLE);
+            holder.yelpLaunch.setVisibility(View.VISIBLE);
+
+            View.OnClickListener launchWeb = view -> launchWebsite(yelpRestaurant.getWebsiteURL(), holder.view);
+            Picasso.get().load(yelpRestaurant.getImageURL()).into(holder.restaurantIcon);
+            holder.restaurantIcon.setOnClickListener(launchWeb);
+            holder.yelpLaunch.setOnClickListener(launchWeb);
+
+            holder.ratingCountView.setText(yelpRestaurant.getRatingCount() + " reviews");
+            String rating = "stars" + Double.toString(yelpRestaurant.getRating()).replaceAll("\\.", "");
+            holder.ratingIcon.setImageResource(holder.view.getResources().getIdentifier(rating, "drawable", "edu.sjsu.android.restaurantroller"));
+            holder.distanceView.setText(String.format("%.2f",YelpHelper.metersToMiles(yelpRestaurant.getDistance())) + " mi");
+            Picasso.get().load(yelpRestaurant.getImageURL()).into(holder.restaurantIcon);
+        }
 
 
         // Changes weight when chevrons are clicked
@@ -106,7 +110,7 @@ public class RollerListAdapter extends RecyclerView.Adapter<RollerListAdapter.Ro
         holder.decreaseWeight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (restaurant.getWeight() > 0){
+                if (restaurant.getWeight() > MainActivity.MIN_WEIGHT){
                     restaurant.setWeight(restaurant.getWeight() - 1);
                     notifyDataSetChanged();
                 }
