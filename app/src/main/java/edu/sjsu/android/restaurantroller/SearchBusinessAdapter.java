@@ -102,8 +102,6 @@ public class SearchBusinessAdapter extends RecyclerView.Adapter<SearchBusinessAd
         holder.addRemoveBtn.setOnClickListener(view -> {
 
                 String check = r.inRoller() ? "Remove from": "Add to";
-                Log.i("testing", check);
-                Log.i("boolean", "a:" + r.inRoller());
                 holder.addRemoveBtn.setText(check + " Roll");
 
                 if(r.inRoller())
@@ -111,7 +109,9 @@ public class SearchBusinessAdapter extends RecyclerView.Adapter<SearchBusinessAd
                 else
                     MainActivity.rollerList.add(r);
                 r.setInRoller(!r.inRoller());
+                Log.i("checking", MainActivity.rollerList.toString());
                 notifyDataSetChanged();
+
             }
         );
 

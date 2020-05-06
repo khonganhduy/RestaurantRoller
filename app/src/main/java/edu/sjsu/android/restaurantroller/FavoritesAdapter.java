@@ -76,7 +76,6 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
             public void onClick(View view) {
 
                 String check = restaurant.inRoller() ? "Remove from": "Add to";
-
                 holder.addRemoveBtn.setText(check + " Roll");
 
                 if(restaurant.inRoller())

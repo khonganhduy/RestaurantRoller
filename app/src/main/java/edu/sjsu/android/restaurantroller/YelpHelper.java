@@ -14,6 +14,7 @@ import com.yelp.fusion.client.models.SearchResponse;
 
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -21,6 +22,7 @@ import java.util.concurrent.ExecutionException;
 import retrofit2.Call;
 import retrofit2.Response;
 
+import static edu.sjsu.android.restaurantroller.MainActivity.QUERY_FAILED;
 import static edu.sjsu.android.restaurantroller.MainActivity.QUERY_FINISHED;
 
 
@@ -38,18 +40,23 @@ public class YelpHelper {
     protected static class YelpQuery extends AsyncTask<Map<String, String>, Void, Response<SearchResponse>> {
         private Response<SearchResponse> response = null;
         private Handler handler;
+        private boolean success = true;
         protected YelpQuery(Handler responseHandler){
             handler = responseHandler;
         }
         @Override
         protected Response<SearchResponse> doInBackground(Map<String, String>... maps){
             Map<String,String> params = new HashMap();
+
             for(Map a: maps)
                 params.putAll(a);
             Call<SearchResponse> call = api.getBusinessSearch(params);
             try {
                  response = call.execute();
-            } catch (IOException e) {
+            } catch (SocketTimeoutException e){
+                success = false;
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
             if(api == null)
@@ -61,7 +68,13 @@ public class YelpHelper {
         @Override
         protected void onPostExecute(Response<SearchResponse> searchResponseResponse) {
             super.onPostExecute(searchResponseResponse);
-            Message m = handler.obtainMessage(QUERY_FINISHED, response);
+            Message m;
+            if(success){
+                 m = handler.obtainMessage(QUERY_FINISHED, response);
+            } else
+            {
+                m = handler.obtainMessage(QUERY_FAILED, null);
+            }
             m.sendToTarget();
         }
     }

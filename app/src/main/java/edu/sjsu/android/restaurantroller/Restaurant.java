@@ -1,5 +1,6 @@
 package edu.sjsu.android.restaurantroller;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.yelp.fusion.client.models.Business;
@@ -60,5 +61,11 @@ public class Restaurant {
 
     public boolean inRoller(){
         return inRoller;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return restaurantName;
     }
 }
