@@ -264,13 +264,21 @@ public class MainActivity extends MainActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        if(locationFinder == null) {
+            locationFinder = new LocationFinder(MainActivity.this);
+        }
         locationFinder.stopUsingGPS();
     }
 
     @Override
     protected void onResume(){
         super.onResume();
-        locationFinder.reenableGPS();
+        if(locationFinder == null) {
+            locationFinder = new LocationFinder(MainActivity.this);
+        }
+        else {
+            locationFinder.reenableGPS();
+        }
     }
 
     protected void onQueryFinish(Response<SearchResponse> r){
@@ -326,7 +334,9 @@ public class MainActivity extends MainActionBarActivity {
     protected Location obtainLocation(){
         Location myLocation = null;
         if(checkPermission()) {
-            locationFinder = new LocationFinder(MainActivity.this);
+            if(locationFinder == null) {
+                locationFinder = new LocationFinder(MainActivity.this);
+            }
             if (locationFinder.canGetLocation()) {
                 myLocation = locationFinder.getLocation();
             } else {
