@@ -170,14 +170,14 @@ public class MainActivity extends MainActionBarActivity {
 
     private void setUpFavoritesTab(Bundle savedInstanceState){
         favoriteRecyclerView = findViewById(R.id.favorites_recycler_view);
-        favoriteRecyclerView.setLayoutManager(layoutManager);
+        //favoriteRecyclerView.setLayoutManager(layoutManager);
 
 
     }
 
     private void setUpResultsTab(Bundle savedInstanceState){
         resultsRecyclerView = findViewById(R.id.search_result_recycler_view);
-        resultsRecyclerView.setLayoutManager(layoutManager);
+        //resultsRecyclerView.setLayoutManager(layoutManager);
     }
 
     private void setUpSearchTab(Bundle savedInstanceState){
