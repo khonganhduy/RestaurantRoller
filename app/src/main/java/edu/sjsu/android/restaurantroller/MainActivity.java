@@ -121,8 +121,8 @@ public class MainActivity extends MainActionBarActivity {
 
         // DUMMY DATA
         restaurantList = new ArrayList<WeightedRestaurant>();
-        restaurantList.add(new WeightedRestaurant("dddddddddddddddddddddddddddd", 1.0, 24, 40000, "test1IconUrl"));
-        restaurantList.add(new WeightedRestaurant("test 2", 4.0, 583, 29, "test2IconUrl"));
+        restaurantList.add(new WeightedRestaurant("dddddddddddddddddddddddddddd", 1.0, 24, 40000, "test1IconUrl", "test1webUrl"));
+        restaurantList.add(new WeightedRestaurant("test 2", 4.0, 583, 29, "test2IconUrl", "test2webUrl"));
         rollerAdapter = new RollerListAdapter(restaurantList);
         rollerRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         rollerRecyclerView.setAdapter(rollerAdapter);
@@ -243,8 +243,8 @@ public class MainActivity extends MainActionBarActivity {
         for(Business b: bis){
             double rating = b.getRating();
             if(rating >= (ratingSeekBar.getProgress() + 2)/ 2.0) {
-                String url = b.getImageUrl().replaceAll("o\\.jpg", "ms.jpg");
-                WeightedRestaurant w = new WeightedRestaurant(b.getName(), rating, b.getReviewCount(), b.getDistance(), url);
+                String iconUrl = b.getImageUrl().replaceAll("o\\.jpg", "ms.jpg");
+                WeightedRestaurant w = new WeightedRestaurant(b.getName(), rating, b.getReviewCount(), b.getDistance(), iconUrl, b.getUrl());
                 t.add(w);
             }
         }
