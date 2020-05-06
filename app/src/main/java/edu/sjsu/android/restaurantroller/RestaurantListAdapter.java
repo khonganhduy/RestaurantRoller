@@ -16,7 +16,7 @@ import com.squareup.picasso.Picasso;
 
 public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAdapter.RestaurantViewHolder>{
 
-    private ArrayList<YelpRestaurant> mDataset;
+    private ArrayList<Restaurant> mDataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -25,7 +25,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
         // each data item is just a string in this case
         private View view;
         private TextView nameTextView, ratingCountView, distanceView, rollWeightView;
-        private ImageButton increaseWeight, decreaseWeight;
+        private ImageButton increaseWeight, decreaseWeight, yelpButton;
         private ImageView ratingIcon, restaurantIcon;
 
         public RestaurantViewHolder(View v) {
@@ -35,6 +35,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
             rollWeightView = (TextView) v.findViewById(R.id.roll_weight);
             increaseWeight = (ImageButton) v.findViewById(R.id.increase);
             decreaseWeight = (ImageButton) v.findViewById(R.id.decrease);
+            yelpButton = (ImageButton) v.findViewById(R.id.yelp_button);
 
             ratingCountView = (TextView) v.findViewById(R.id.rating_text);
             ratingIcon = (ImageView) v.findViewById(R.id.rating_icon);
@@ -46,7 +47,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RestaurantListAdapter(ArrayList<YelpRestaurant> myDataset) {
+    public RestaurantListAdapter(ArrayList<Restaurant> myDataset) {
         mDataset = myDataset;
     }
 
@@ -71,17 +72,24 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
     public void onBindViewHolder(RestaurantViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        YelpRestaurant restaurant = mDataset.get(position);
+
+        Restaurant restaurant = mDataset.get(position);
         holder.nameTextView.setText(restaurant.getRestaurantName());
-
-        holder.ratingCountView.setText(restaurant.getRatingCount() + " reviews");
-        String rating = "stars" + Double.toString(restaurant.getRating()).replaceAll("\\.", "");
-        holder.ratingIcon.setImageResource(holder.view.getResources().getIdentifier(rating, "drawable", "edu.sjsu.android.restaurantroller"));
-
-        holder.distanceView.setText(String.format("%.2f",YelpHelper.metersToMiles(restaurant.getDistance())) + " mi");
-        Picasso.get().load(restaurant.getImageURL()).into(holder.restaurantIcon);
-        // Set the weight of the restaurant
         holder.rollWeightView.setText(String.valueOf(restaurant.getWeight()));
+        if (mDataset.get(position) instanceof YelpRestaurant){
+            YelpRestaurant yelpRestaurant = (YelpRestaurant) restaurant;
+            holder.ratingCountView.setVisibility(View.VISIBLE);
+            holder.ratingIcon.setVisibility(View.VISIBLE);
+            holder.distanceView.setVisibility(View.VISIBLE);
+            holder.yelpButton.setVisibility(View.VISIBLE);
+
+
+            holder.ratingCountView.setText(yelpRestaurant.getRatingCount() + " reviews");
+            String rating = "stars" + Double.toString(yelpRestaurant.getRating()).replaceAll("\\.", "");
+            holder.ratingIcon.setImageResource(holder.view.getResources().getIdentifier(rating, "drawable", "edu.sjsu.android.restaurantroller"));
+            holder.distanceView.setText(String.format("%.2f",YelpHelper.metersToMiles(yelpRestaurant.getDistance())) + " mi");
+            Picasso.get().load(yelpRestaurant.getImageURL()).into(holder.restaurantIcon);
+        }
 
         // Changes weight when chevrons are clicked
         holder.increaseWeight.setOnClickListener(new View.OnClickListener() {

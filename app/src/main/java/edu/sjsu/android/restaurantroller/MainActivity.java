@@ -57,7 +57,7 @@ public class MainActivity extends MainActionBarActivity {
     private RecyclerView restaurantRecyclerView;
     private RecyclerView.Adapter restaurantAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private ArrayList<YelpRestaurant> restaurantList;
+    private ArrayList<Restaurant> restaurantList;
     //private ArrayList<String> restaurantList;
     // Search Tab variables
     private LinearLayout optionsTab;
@@ -106,10 +106,13 @@ public class MainActivity extends MainActionBarActivity {
         layoutManager = new LinearLayoutManager(this);
         restaurantRecyclerView.setLayoutManager(layoutManager);
 
-        // DUMMY DATA
-        restaurantList = new ArrayList<YelpRestaurant>();
+        // DUMMY DATA START
+        restaurantList = new ArrayList<Restaurant>();
         restaurantList.add(new YelpRestaurant("dddddddddddddddddddddddddddd", 1.0, 24, 40000, "test1IconUrl"));
         restaurantList.add(new YelpRestaurant("test 2", 4.0, 583, 29, "test2IconUrl"));
+        restaurantList.add(new Restaurant("PERSONAL RESTAURANT"));
+        // DUMMY DATA END
+
         restaurantAdapter = new RestaurantListAdapter(restaurantList);
         restaurantRecyclerView.addItemDecoration(new DividerItemDecoration(restaurantRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         restaurantRecyclerView.setAdapter(restaurantAdapter);
@@ -226,7 +229,7 @@ public class MainActivity extends MainActionBarActivity {
         Log.i("asyncro response", r.toString());
         tabs.setCurrentTab(0);
         ArrayList<Business> bis = r.body().getBusinesses();
-        ArrayList<YelpRestaurant> t = new ArrayList<>();
+        ArrayList<Restaurant> t = new ArrayList<>();
         for(Business b: bis){
             String url = b.getImageUrl().replaceAll("o\\.jpg", "ms.jpg");
             Log.i("Image testing", url);
@@ -243,14 +246,17 @@ public class MainActivity extends MainActionBarActivity {
         for (int i = 0; i < weights.length; i++){
             weights[i] = restaurantList.get(i).getWeight();
         }
-        YelpRestaurant rolledRestaurant = restaurantList.get(new RollerUtility().rollWeighted(weights));
+        Restaurant rolledRestaurant = restaurantList.get(new RollerUtility().rollWeighted(weights));
         Bundle bundle = new Bundle();
         bundle.putString(RESTAURANT_NAME_KEY, rolledRestaurant.getRestaurantName());
         bundle.putInt(RESTAURANT_WEIGHT_KEY, rolledRestaurant.getWeight());
-        bundle.putString(RESTAURANT_IMAGE_KEY, rolledRestaurant.getImageURL());
-        bundle.putDouble(RESTAURANT_RATING_KEY, rolledRestaurant.getRating());
-        bundle.putInt(RESTAURANT_RATING_COUNT_KEY, rolledRestaurant.getRatingCount());
-        bundle.putDouble(RESTAURANT_DISTANCE_KEY, rolledRestaurant.getDistance());
+        if (rolledRestaurant instanceof YelpRestaurant){
+            YelpRestaurant yelpRestaurant = (YelpRestaurant) rolledRestaurant;
+            bundle.putString(RESTAURANT_IMAGE_KEY, yelpRestaurant.getImageURL());
+            bundle.putDouble(RESTAURANT_RATING_KEY, yelpRestaurant.getRating());
+            bundle.putInt(RESTAURANT_RATING_COUNT_KEY, yelpRestaurant.getRatingCount());
+            bundle.putDouble(RESTAURANT_DISTANCE_KEY, yelpRestaurant.getDistance());
+        }
         RollResultFragment dialogFragment = new RollResultFragment();
         dialogFragment.setArguments(bundle);
         AppCompatActivity activity = (AppCompatActivity) view.getContext();
