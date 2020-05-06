@@ -1,12 +1,17 @@
 package edu.sjsu.android.restaurantroller;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import com.yelp.fusion.client.models.Business;
 import com.yelp.fusion.client.models.SearchResponse;
@@ -50,6 +56,10 @@ public class MainActivity extends MainActionBarActivity {
 
     // Object to pull/put data from database
 
+
+    // Location finder for latitude and longitude retrieval
+    private LocationFinder locationFinder;
+    private static final int PERMISSION_REQUEST_CODE = 3894;
 
     // Start labelling instance variables to the subtab they correlate to
     private TabHost tabs;
@@ -242,6 +252,18 @@ public class MainActivity extends MainActionBarActivity {
         });
     }
 
+    // Used to disable or enable GPS if the activity goes out of focus
+    @Override
+    protected void onPause() {
+        super.onPause();
+        locationFinder.stopUsingGPS();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        locationFinder.reenableGPS();
+    }
 
     protected void onQueryFinish(Response<SearchResponse> r){
         Log.i("asyncro response", r.toString());
@@ -285,9 +307,68 @@ public class MainActivity extends MainActionBarActivity {
         dialogFragment.show(activity.getSupportFragmentManager(), "roll_restaurants");
     }
 
-    //make sure in format of "http://example.com"
+    // Website Launcher
+    // Make sure in format of "http://example.com"
     protected void launchWebsite(String url){
         Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(webIntent);
     }
+
+    // Method to obtain a location object which gives you the latitude and longitude
+    protected Location obtainLocation(){
+        Location myLocation = null;
+        if(checkPermission()) {
+            locationFinder = new LocationFinder(MainActivity.this);
+            if (locationFinder.canGetLocation()) {
+                myLocation = locationFinder.getLocation();
+            } else {
+                locationFinder.showSettingsAlert();
+            }
+        }
+        else{
+            requestPermission();
+        }
+        return myLocation;
+    }
+
+    // Permission methods for the Location services
+    private boolean checkPermission(){
+        int result = ContextCompat.checkSelfPermission(
+                MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION);
+        if(result == PackageManager.PERMISSION_GRANTED){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    private void requestPermission(){
+        if(ActivityCompat.shouldShowRequestPermissionRationale(
+                MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)){
+            Toast.makeText(MainActivity.this, "Location services permission",
+                    Toast.LENGTH_LONG).show();
+        }
+        else{
+            ActivityCompat.requestPermissions(
+                    MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    // Logs permission check results -- Body is not necessary
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults){
+        switch(requestCode){
+            case PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    Log.e("value","Permission Granted, Now you can use location services.");
+                }
+                else{
+                    Log.e("value", "Permission Denied, You cannot use location services.");
+                }
+                break;
+        }
+    }
+
+
 }
