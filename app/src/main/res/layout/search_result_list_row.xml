@@ -23,13 +23,15 @@
         <Button
             android:id="@+id/add_remove_button"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:drawableRight="@drawable/plus"
+            android:textAlignment="textEnd"
+            android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
-            android:drawablePadding="10dp"
-            android:paddingHorizontal="7dp"
-            android:text="Add to roll" />
+            android:drawablePadding="12dp"
+            android:paddingHorizontal="0dp"
+            android:text="Add" />
 
     </RelativeLayout>
 
