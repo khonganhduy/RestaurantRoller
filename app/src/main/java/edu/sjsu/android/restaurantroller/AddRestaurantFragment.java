@@ -1,17 +1,15 @@
 package edu.sjsu.android.restaurantroller;
 
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -24,7 +22,7 @@ import java.util.Arrays;
 
 public class AddRestaurantFragment extends DialogFragment {
 
-    // Temporary autofill
+    // DUMMY DATA FOR AUTOFILL
     private static final String[] COUNTRIES = new String[] {
             "Belgium", "France", "Italy", "Germany", "Spain"
     };
@@ -36,8 +34,6 @@ public class AddRestaurantFragment extends DialogFragment {
     private RecyclerView.LayoutManager layoutManager;
     private AddTagsAdapter mAdapter;
     private ArrayList<String> myDataSet;
-
-    private InputFilter filter;
 
 
     public static class AlphaNumericInputFilter implements InputFilter {
@@ -66,8 +62,8 @@ public class AddRestaurantFragment extends DialogFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
-        confirmBtn = (Button) view.findViewById(R.id.confirm_btn);
-        cancelBtn = (Button) view.findViewById(R.id.cancel_btn);
+        confirmBtn = (Button) view.findViewById(R.id.add_restaurant_confirm_btn);
+        cancelBtn = (Button) view.findViewById(R.id.add_restaurant_cancel_btn);
         addTagBtn = (Button) view.findViewById(R.id.add_tag_btn);
         tagSearch = (AutoCompleteTextView) view.findViewById(R.id.tag_search);
         ArrayList<InputFilter> curInputFilters = new ArrayList<InputFilter>(Arrays.asList(tagSearch.getFilters()));
@@ -112,9 +108,15 @@ public class AddRestaurantFragment extends DialogFragment {
         addTagBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                myDataSet.add(0, tagSearch.getText().toString());
-                tagSearch.getText().clear();
-                mAdapter.notifyDataSetChanged();
+                // Check empty string
+                if (tagSearch.getText().toString().equals("")){
+                    Toast.makeText(view.getContext(), "Please enter a tag to search.", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    myDataSet.add(0, tagSearch.getText().toString());
+                    tagSearch.getText().clear();
+                    mAdapter.notifyDataSetChanged();
+                }
             }
         });
     }
