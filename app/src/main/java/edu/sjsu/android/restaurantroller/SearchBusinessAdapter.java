@@ -100,10 +100,6 @@ public class SearchBusinessAdapter extends RecyclerView.Adapter<SearchBusinessAd
         holder.distanceView.setText(String.format("%.2f", YelpHelper.metersToMiles(b.getDistance())) + " mi");
 
         holder.addRemoveBtn.setOnClickListener(view -> {
-
-                String check = r.inRoller() ? "Remove from": "Add to";
-                holder.addRemoveBtn.setText(check + " Roll");
-
                 if(r.inRoller())
                     MainActivity.rollerList.remove(r);
                 else
@@ -111,9 +107,10 @@ public class SearchBusinessAdapter extends RecyclerView.Adapter<SearchBusinessAd
                 r.setInRoller(!r.inRoller());
                 Log.i("checking", MainActivity.rollerList.toString());
                 notifyDataSetChanged();
+        });
 
-            }
-        );
+        String check = r.inRoller() ? "Remove": "Add";
+        holder.addRemoveBtn.setText(check);
 
     }
 
