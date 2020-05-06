@@ -12,7 +12,7 @@ import com.yelp.fusion.client.models.Business;
 
 import java.util.ArrayList;
 
-public class SearchBusinessAdapter extends RecyclerView.Adapter<RestaurantListAdapter.RestaurantViewHolder> {
+public class SearchBusinessAdapter extends RecyclerView.Adapter<RollerListAdapter.RollverViewHolder> {
 
     private ArrayList<Business> mDataset;
 
@@ -45,18 +45,18 @@ public class SearchBusinessAdapter extends RecyclerView.Adapter<RestaurantListAd
 
     // Create new views (invoked by the layout manager)
     @Override
-    public RestaurantListAdapter.RestaurantViewHolder onCreateViewHolder(ViewGroup parent,
-                                                                         int viewType) {
+    public RollerListAdapter.RollverViewHolder onCreateViewHolder(ViewGroup parent,
+                                                                  int viewType) {
         // create a new view
         View v = (View) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.restaurant_list_row, parent, false);
-        RestaurantListAdapter.RestaurantViewHolder vh = new RestaurantListAdapter.RestaurantViewHolder(v);
+        RollerListAdapter.RollverViewHolder vh = new RollerListAdapter.RollverViewHolder(v);
         return vh;
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(RestaurantListAdapter.RestaurantViewHolder holder, final int position) {
+    public void onBindViewHolder(RollerListAdapter.RollverViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         //WeightedRestaurant restaurant = mDataset.get(position);

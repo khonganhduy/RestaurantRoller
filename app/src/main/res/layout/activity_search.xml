@@ -113,7 +113,7 @@
             android:id="@+id/ratingBar"
             android:layout_width="200sp"
             android:layout_height="wrap_content"
-            android:max="9"
+            android:max="8"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
