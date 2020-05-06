@@ -1,6 +1,5 @@
 package edu.sjsu.android.restaurantroller;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import com.squareup.picasso.Picasso;
 
 public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAdapter.RestaurantViewHolder>{
 
-    private ArrayList<WeightedRestaurant> mDataset;
+    private ArrayList<YelpRestaurant> mDataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -47,7 +46,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RestaurantListAdapter(ArrayList<WeightedRestaurant> myDataset) {
+    public RestaurantListAdapter(ArrayList<YelpRestaurant> myDataset) {
         mDataset = myDataset;
     }
 
@@ -72,7 +71,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
     public void onBindViewHolder(RestaurantViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        WeightedRestaurant restaurant = mDataset.get(position);
+        YelpRestaurant restaurant = mDataset.get(position);
         holder.nameTextView.setText(restaurant.getRestaurantName());
 
         holder.ratingCountView.setText(restaurant.getRatingCount() + " reviews");
@@ -95,7 +94,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
         holder.decreaseWeight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (restaurant.getWeight() > 0){
+                if (restaurant.getWeight() > MainActivity.MIN_WEIGHT){
                     restaurant.setWeight(restaurant.getWeight() - 1);
                     notifyDataSetChanged();
                 }
