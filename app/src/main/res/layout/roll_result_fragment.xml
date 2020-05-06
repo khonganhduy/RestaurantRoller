@@ -1,6 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="10dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="12pt"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="5dp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:text="@string/roll_restaurant_fragment_title" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:layout_constraintLeft_toLeftOf="parent">
+
+            <ImageView
+                android:id="@+id/selected_shop_icon"
+                android:layout_width="160px"
+                android:layout_height="160px"
+                android:layout_marginTop="3dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/questionmark" />
+
+            <TextView
+                android:id="@+id/selected_first_line"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_alignWithParentIfMissing="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/selected_shop_icon"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:text="Example application"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/selected_rating_icon"
+                android:layout_width="90dp"
+                android:layout_height="18dp"
+                android:layout_below="@+id/selected_first_line"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="3dp"
+                android:layout_toRightOf="@+id/selected_shop_icon"
+                android:scaleType="fitCenter"
+                android:src="@drawable/stars00" />
+
+            <TextView
+                android:id="@+id/selected_rating_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignWithParentIfMissing="true"
+                android:layout_below="@+id/selected_rating_icon"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/selected_shop_icon"
+                android:gravity="center_vertical"
+                android:paddingBottom="3pt"
+                android:text="0 Ratings"
+                android:textSize="12dp" />
+
+            <ImageButton
+                android:id="@+id/selected_yelp_button"
+                android:layout_width="46dp"
+                android:layout_height="32dp"
+                android:layout_below="@id/selected_first_line"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_toRightOf="@id/selected_rating_icon"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/yelp_logo" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <RelativeLayout
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="7">
+
+                <TextView
+                    android:id="@+id/selected_distance_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginHorizontal="10dp"
+                    android:text="0 mi" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="5dp"
+        android:layout_weight="1"
+        >
+
+        <Button
+            android:id="@+id/roll_restaurant_close_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/roll_restaurant_reroll_btn"
+            android:background="@android:color/transparent"
+            android:textColor="@android:color/holo_orange_dark"
+            android:text="Close" />
+
+        <Button
+            android:id="@+id/roll_restaurant_reroll_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@android:color/transparent"
+            android:textColor="@android:color/holo_orange_dark"
+            android:text="ReRoll" />
+    </RelativeLayout>
+
+</LinearLayout>
