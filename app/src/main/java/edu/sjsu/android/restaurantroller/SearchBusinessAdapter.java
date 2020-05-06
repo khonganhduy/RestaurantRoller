@@ -49,7 +49,7 @@ public class SearchBusinessAdapter extends RecyclerView.Adapter<RollerListAdapte
                                                                   int viewType) {
         // create a new view
         View v = (View) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.restaurant_list_row, parent, false);
+                .inflate(R.layout.favorite_list_row, parent, false);
         RollerListAdapter.RollverViewHolder vh = new RollerListAdapter.RollverViewHolder(v);
         return vh;
     }

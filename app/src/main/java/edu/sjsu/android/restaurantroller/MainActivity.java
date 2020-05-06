@@ -76,6 +76,10 @@ public class MainActivity extends MainActionBarActivity {
     private RecyclerView.Adapter favoriteAdapter;
 
     // Search Results Tab variables
+    private RecyclerView  resultsRecyclerView;
+    private RecyclerView.Adapter resulsAdapter;
+
+    // Search Results Tab variables
     private RestaurantData restaurantData;
 
     // Search Tab variables
@@ -110,6 +114,7 @@ public class MainActivity extends MainActionBarActivity {
         // and use insert method of Restaurant Data
         restaurantData = new RestaurantData(getApplication());
 
+        layoutManager = new LinearLayoutManager(this);
         setUpRollerTab(savedInstanceState);
         setUpFavoritesTab(savedInstanceState);
         setUpResultsTab(savedInstanceState);
@@ -134,7 +139,6 @@ public class MainActivity extends MainActionBarActivity {
         // Roller Tab Setup
         rollerRecyclerView = (RecyclerView) findViewById(R.id.roller_recycler_view);
         rollerRecyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
         rollerRecyclerView.setLayoutManager(layoutManager);
 
         // DUMMY DATA
@@ -165,11 +169,15 @@ public class MainActivity extends MainActionBarActivity {
     }
 
     private void setUpFavoritesTab(Bundle savedInstanceState){
+        favoriteRecyclerView = findViewById(R.id.favorites_recycler_view);
+        favoriteRecyclerView.setLayoutManager(layoutManager);
+
 
     }
 
     private void setUpResultsTab(Bundle savedInstanceState){
-
+        resultsRecyclerView = findViewById(R.id.search_result_recycler_view);
+        resultsRecyclerView.setLayoutManager(layoutManager);
     }
 
     private void setUpSearchTab(Bundle savedInstanceState){

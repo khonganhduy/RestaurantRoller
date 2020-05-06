@@ -99,7 +99,6 @@ public class RollerListAdapter extends RecyclerView.Adapter<RollerListAdapter.Ro
         }
 
 
-
         // Changes weight when chevrons are clicked
         holder.increaseWeight.setOnClickListener(new View.OnClickListener() {
             @Override
