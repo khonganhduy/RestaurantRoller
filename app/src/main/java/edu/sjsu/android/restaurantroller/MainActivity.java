@@ -81,6 +81,8 @@ public class MainActivity extends MainActionBarActivity {
     private RecyclerView.Adapter favoriteAdapter;
     private RecyclerView.LayoutManager favoriteLayoutManager;
     private Button addFavoriteRestaurantBtn, deleteModeBtn;
+    protected static boolean deleteMode = false;
+
 
     // Search Results Tab variables
     private RecyclerView  resultsRecyclerView;
@@ -207,6 +209,7 @@ public class MainActivity extends MainActionBarActivity {
         deleteModeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                deleteMode = !deleteMode;
                 // TODO implement removal functionality of restaurant
 
                 /* WILL MODIFY WHEN DATA SELECTION IMPLEMENTED
@@ -224,8 +227,7 @@ public class MainActivity extends MainActionBarActivity {
         resultsTagFinder = findViewById(R.id.search_filter_text);
 
         resultsTagFinder.setOnEditorActionListener((v, actionId, event) -> {
-            Log.i("which id is this", "x:" + actionId);
-            if (actionId == EditorInfo.IME_ACTION_GO) {
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
                 Log.i("test", "search called");
                 String tag = resultsTagFinder.getText().toString();
                 if(tag.isEmpty())
@@ -242,6 +244,8 @@ public class MainActivity extends MainActionBarActivity {
                 InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
+            else
+                Log.i("which id is this", "x:" + actionId);
             return false; });
     }
 

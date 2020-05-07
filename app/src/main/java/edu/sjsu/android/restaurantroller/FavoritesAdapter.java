@@ -13,11 +13,13 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.FavoritesViewHolder> {
 
     private ArrayList<Restaurant> mDataset;
+    private RestaurantData restaurantData;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -41,8 +43,9 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
         }
     }
 
-    public FavoritesAdapter(ArrayList<Restaurant> myDataset) {
+    public FavoritesAdapter(ArrayList<Restaurant> myDataset, RestaurantData rData) {
         mDataset = myDataset;
+        restaurantData = rData;
     }
 
 
@@ -63,12 +66,16 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
 
         Restaurant restaurant = mDataset.get(position);
         holder.nameTextView.setText(restaurant.getRestaurantName());
-        holder.tagsTextView.setText(restaurant.getTags().toArray().toString());
+        holder.tagsTextView.setText(Arrays.toString(restaurant.getTags().toArray()));
 
         holder.addRemoveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(restaurant.inRoller())
+                if(MainActivity.deleteMode){
+                    mDataset.remove(restaurant);
+                    restaurantData.deleteAllByName(restaurant.getRestaurantName());
+                }
+                else if(restaurant.inRoller())
                     MainActivity.rollerList.remove(restaurant);
                 else
                     MainActivity.rollerList.add(restaurant);
@@ -77,7 +84,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
             }}
         );
 
-        String check = restaurant.inRoller() ? "Remove": "Add";
+        String check = MainActivity.deleteMode ? "Delete" : restaurant.inRoller() ? "Remove": "Add";
         holder.addRemoveBtn.setText(check);
     }
 
