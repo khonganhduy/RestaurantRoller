@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,8 +21,6 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.inputmethod.EditorInfo;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -31,7 +28,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.SearchView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TabHost;
@@ -86,6 +82,8 @@ public class MainActivity extends MainActionBarActivity {
     private RecyclerView.Adapter favoriteAdapter;
     private RecyclerView.LayoutManager favoriteLayoutManager;
     private Button addFavoriteRestaurantBtn, deleteModeBtn;
+    protected static boolean deleteMode = false;
+
 
     // Search Results Tab variables
     private RecyclerView  resultsRecyclerView;
@@ -212,6 +210,9 @@ public class MainActivity extends MainActionBarActivity {
         deleteModeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                deleteMode = !deleteMode;
+                String btnText = deleteMode ? "Delete Mode Off" : "Delete Mode";
+                deleteModeBtn.setText(btnText);
                 // TODO implement removal functionality of restaurant
 
                 /* WILL MODIFY WHEN DATA SELECTION IMPLEMENTED
@@ -246,6 +247,8 @@ public class MainActivity extends MainActionBarActivity {
                 InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
+            else
+                Log.i("which id is this", "x:" + actionId);
             return false; });
     }
 
