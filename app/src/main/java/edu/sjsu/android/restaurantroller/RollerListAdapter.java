@@ -19,7 +19,7 @@ import com.squareup.picasso.Picasso;
 
 public class RollerListAdapter extends RecyclerView.Adapter<RollerListAdapter.RollverViewHolder>{
 
-    private ArrayList<Restaurant> mDataset;
+    private ArrayList<Restaurant> mDataset = null;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -128,6 +128,25 @@ public class RollerListAdapter extends RecyclerView.Adapter<RollerListAdapter.Ro
     protected void launchWebsite(String url, View v){
         Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         v.getContext().startActivity(webIntent);
+    }
+
+    public boolean addToDataset(Restaurant r){
+        if(mDataset == null){
+            mDataset = new ArrayList<>();
+        }
+        boolean ret = mDataset.add(r);
+        notifyItemInserted(mDataset.size() - 1);
+        return ret;
+    }
+
+    public boolean removeFromDataset(Restaurant r){
+        if(mDataset == null)
+            return false;
+        int ind = mDataset.indexOf(r);
+        boolean ret = mDataset.remove(r);
+        if(ret)
+            notifyItemRemoved(ind);
+        return ret;
     }
 
 }

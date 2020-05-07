@@ -101,9 +101,9 @@ public class SearchBusinessAdapter extends RecyclerView.Adapter<SearchBusinessAd
 
         holder.addRemoveBtn.setOnClickListener(view -> {
                 if(r.inRoller())
-                    MainActivity.rollerList.remove(r);
+                    MainActivity.rollerAdapter.removeFromDataset(r);
                 else
-                    MainActivity.rollerList.add(r);
+                    MainActivity.rollerAdapter.addToDataset(r);
                 r.setInRoller(!r.inRoller());
                 Log.i("checking", MainActivity.rollerList.toString());
                 notifyDataSetChanged();

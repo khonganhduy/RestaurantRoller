@@ -85,9 +85,9 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
                     restaurantData.deleteAllByName(restaurant.getRestaurantName());
                 }
                 else if(restaurant.inRoller())
-                    MainActivity.rollerList.remove(restaurant);
+                    MainActivity.rollerAdapter.removeFromDataset(restaurant);
                 else
-                    MainActivity.rollerList.add(restaurant);
+                    MainActivity.rollerAdapter.addToDataset(restaurant);
                 restaurant.setInRoller(!restaurant.inRoller());
                 notifyDataSetChanged();
             }}
