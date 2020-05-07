@@ -201,15 +201,7 @@ public class MainActivity extends MainActionBarActivity {
                 dialogFragment.show(activity.getSupportFragmentManager(), "editText");
             }
         });
-        deleteModeBtn = findViewById(R.id.delete_mode_btn);
-        deleteModeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                deleteMode = !deleteMode;
-                String btnText = deleteMode ? "Delete Mode Off" : "Delete Mode";
-                deleteModeBtn.setText(btnText);
-            }
-        });
+
         setInitialDatasetForAdapter();
         initialDataset = new ArrayList<>();
         favoriteAdapter = new FavoritesAdapter(initialDataset, restaurantData);
@@ -236,6 +228,7 @@ public class MainActivity extends MainActionBarActivity {
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
             return false; });
+        setUpSwipeToDeleteFromDatabase(initialDataset, favoriteRecyclerView, favoriteAdapter);
     }
 
     private void setUpResultsTab(Bundle savedInstanceState) {
@@ -552,6 +545,25 @@ public class MainActivity extends MainActionBarActivity {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 dataset.get(viewHolder.getAdapterPosition()).setInRoller(false);
+                dataset.remove(viewHolder.getAdapterPosition());
+                adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+            }
+        };
+        ItemTouchHelper itemTouch = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouch.attachToRecyclerView(recyclerView);
+    }
+
+    public void setUpSwipeToDeleteFromDatabase(ArrayList<Restaurant> dataset, RecyclerView recyclerView, RecyclerView.Adapter adapter){
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                //dataset.get(viewHolder.getAdapterPosition()).setInRoller(false);
+                restaurantData.deleteAllByName(dataset.get(viewHolder.getAdapterPosition()).getRestaurantName());
                 dataset.remove(viewHolder.getAdapterPosition());
                 adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
             }

@@ -13,17 +13,7 @@
         android:orientation="horizontal"
         android:background="@color/yelpBackground">
 
-        <Button
-            android:id="@+id/delete_mode_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:text="Delete Mode"
-            android:layout_marginLeft="10dp"
-            android:textSize="12dp"
-            android:drawableLeft="@drawable/minus"
-            android:drawablePadding="10dp"
-            android:background="?attr/selectableItemBackgroundBorderless" />
+
 
         <Button
             android:id="@+id/add_restaurant_btn"
