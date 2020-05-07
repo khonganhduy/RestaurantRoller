@@ -79,7 +79,9 @@ public class RollerListAdapter extends RecyclerView.Adapter<RollerListAdapter.Ro
         Restaurant restaurant = mDataset.get(position);
         holder.nameTextView.setText(restaurant.getRestaurantName());
         holder.rollWeightView.setText(String.valueOf(restaurant.getWeight()));
-        if (mDataset.get(position) instanceof YelpRestaurant){
+        Log.i("Restaraunt:", restaurant.getRestaurantName());
+        Log.i("Pos", "v:" + position);
+        if (restaurant instanceof YelpRestaurant){
             YelpRestaurant yelpRestaurant = (YelpRestaurant) restaurant;
             holder.ratingCountView.setVisibility(View.VISIBLE);
             holder.ratingIcon.setVisibility(View.VISIBLE);

@@ -66,6 +66,8 @@ public class YelpRestaurant extends Restaurant{
 
     @Override
     public boolean equals(@Nullable Object obj) {
+        if(!(obj instanceof YelpRestaurant))
+            return false;
         YelpRestaurant r = (YelpRestaurant) obj;
         return super.equals(obj) && rating == r.rating && ratingCount == r.ratingCount && distance == r.distance && imageURL.equals(r.imageURL) && websiteURL.equals(r.websiteURL);
     }

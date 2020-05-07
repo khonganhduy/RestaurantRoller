@@ -210,7 +210,8 @@ public class MainActivity extends MainActionBarActivity {
         favoritesTagFinder = findViewById(R.id.favorites_filter_text);
         favoritesTagFinder.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                String tag = resultsTagFinder.getText().toString();
+                String tag = favoritesTagFinder.getText().toString();
+                Log.i("testing", tag);
                 if(!tag.isEmpty()){
                     filteredFavorites = new ArrayList<Restaurant>();
                     for(Restaurant r: initialDataset){
