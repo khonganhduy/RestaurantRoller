@@ -87,7 +87,7 @@ public class MainActivity extends MainActionBarActivity {
     protected static boolean deleteMode = false;
     private ArrayList<Restaurant> filteredFavorites;
     // DB load
-    private ArrayList<Restaurant> initialDataset;
+    private static ArrayList<Restaurant> initialDataset;
 
     // Search Results Tab variables
     private RecyclerView resultsRecyclerView;
