@@ -10,6 +10,15 @@
     <string name="search_term_hint">Enter a term</string>
     <string name="search_tag_hint">Letters only</string>
     <string name="help">Help</string>
+    <string name="help_title">Select an Item For More Information:</string>
+    <string name="help_roll">Roll</string>
+    <string name="help_favorite">Favorite</string>
+    <string name="help_search_results">Search Results</string>
+    <string name="help_search">Search</string>
+    <string name="body_roll">This Tab shows restaurants you added to a list where the application will randomly select one restaurant from the entire list.\n\nTo randomly select a restaurant click on the "ROLL RESTAURANTS" button in the top right hand corner.\n\nThe number on the right column indicates the likelihood that a restaurant will be chosen.\nThe higher the number the more likely the restaurant will be chosen.\n\nYou can increase or decrease this number by pressing on the UP and UP arrows above and below the number.</string>
+    <string name="body_favorite">Favorite</string>
+    <string name="body_search_results">Search Results</string>
+    <string name="body_search">Search</string>
     <string name="add_restaurant_fragment_title">Add Restaurant</string>
     <string name="roll_restaurant_fragment_title">Roller Selected</string>
     <string name="search_button_text">Search</string>
