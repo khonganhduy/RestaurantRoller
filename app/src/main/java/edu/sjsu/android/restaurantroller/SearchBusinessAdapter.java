@@ -100,11 +100,10 @@ public class SearchBusinessAdapter extends RecyclerView.Adapter<SearchBusinessAd
         holder.distanceView.setText(String.format("%.2f", YelpHelper.metersToMiles(r.getDistance())) + " mi");
 
         holder.addRemoveBtn.setOnClickListener(view -> {
-                if(r.inRoller())
+                if(MainActivity.rollerAdapter.contains(r))
                     Toast.makeText(holder.view.getContext(), "Item is already in the roller.", Toast.LENGTH_SHORT).show();
                 else{
                     MainActivity.rollerAdapter.addToDataset(r);
-                    r.setInRoller(true);
                     Toast.makeText(holder.view.getContext(), "Item added to roller.", Toast.LENGTH_SHORT).show();
                 }
         });

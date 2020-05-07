@@ -87,11 +87,10 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
         holder.addRemoveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(restaurant.inRoller())
+                if(MainActivity.rollerAdapter.contains(restaurant))
                     Toast.makeText(holder.view.getContext(), "Item is already in the roller.", Toast.LENGTH_SHORT).show();
                 else{
                     MainActivity.rollerAdapter.addToDataset(restaurant);
-                    restaurant.setInRoller(true);
                     Toast.makeText(holder.view.getContext(), "Item added to the roller.", Toast.LENGTH_SHORT).show();
                 }
             }}
