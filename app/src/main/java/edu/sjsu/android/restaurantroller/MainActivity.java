@@ -168,11 +168,11 @@ public class MainActivity extends MainActionBarActivity {
         restaurantList.add(new Restaurant("yep", new TreeSet<String>()));
         restaurantList.add(new Restaurant("nope", new TreeSet<String>()));
 
-        rollerAdapter = new RollerListAdapter(restaurantList);
+        rollerAdapter = new RollerListAdapter(rollerList);
         rollerRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         rollerRecyclerView.setAdapter(rollerAdapter);
 
-        setUpSwipeToDelete(restaurantList, rollerRecyclerView, rollerAdapter);
+        setUpSwipeToDelete(rollerList, rollerRecyclerView, rollerAdapter);
 
         // Creates fragment to add a restaurant
         addRestaurantBtn = findViewById(R.id.add_restaurant_btn);
