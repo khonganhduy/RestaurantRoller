@@ -68,9 +68,6 @@ public class AddRestaurantFragment extends DialogFragment {
         InputFilter[] newInputFilters = curInputFilters.toArray(new InputFilter[curInputFilters.size()]);
         tagSearch.setFilters(newInputFilters);
 
-        // Temporary Dataset
-        //myDataSet = new ArrayList<String>(Arrays.asList("jojo", "dab", "test", "test2", "test3", "test4"));
-
         //Actual Dataset
         myDataSet = new ArrayList<String>();
 
