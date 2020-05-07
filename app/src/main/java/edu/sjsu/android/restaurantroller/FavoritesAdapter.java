@@ -35,7 +35,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
             view = v;
             nameTextView = (TextView) v.findViewById(R.id.first_line);
             tagsTextView = (TextView) v.findViewById(R.id.tags_text);
-            addRemoveBtn = (Button) v.findViewById(R.id.add_remove_button);
+            addRemoveBtn = (Button) v.findViewById(R.id.add_remove_button_favorite);
         }
 
         public void setAddedToRoll(boolean addedToRoll) {
@@ -46,6 +46,14 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
     public FavoritesAdapter(ArrayList<Restaurant> myDataset, RestaurantData rData) {
         mDataset = myDataset;
         restaurantData = rData;
+    }
+
+    public void addToDataset(Restaurant r){
+        if (mDataset == null) {
+            mDataset = new ArrayList<>();
+        }
+        mDataset.add(r);
+        notifyItemInserted(mDataset.size() - 1);
     }
 
 
@@ -66,7 +74,8 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
 
         Restaurant restaurant = mDataset.get(position);
         holder.nameTextView.setText(restaurant.getRestaurantName());
-        holder.tagsTextView.setText(Arrays.toString(restaurant.getTags().toArray()));
+        String myTags = Arrays.toString(restaurant.getTags().toArray());
+        holder.tagsTextView.setText(myTags.substring(1, myTags.length() - 1));
 
         holder.addRemoveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +100,10 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.size();
+        if(mDataset != null) {
+            return mDataset.size();
+        }
+        return 0;
     }
 
     //make sure in format of "http://example.com"
