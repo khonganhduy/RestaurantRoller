@@ -85,9 +85,11 @@ public class MainActivity extends MainActionBarActivity {
     private FavoritesAdapter favoriteAdapter;
     private RecyclerView.LayoutManager favoriteLayoutManager;
     private Button addFavoriteRestaurantBtn, deleteModeBtn;
+    private EditText favoritesTagFinder;
     protected static boolean deleteMode = false;
-
-    private static ArrayList<Restaurant> initialDataset;
+    private ArrayList<Restaurant> filteredFavorites;
+    // DB load
+    private ArrayList<Restaurant> initialDataset;
 
     // Search Results Tab variables
     private RecyclerView resultsRecyclerView;
@@ -162,12 +164,7 @@ public class MainActivity extends MainActionBarActivity {
         rollerLayoutManager = new LinearLayoutManager(this);
         rollerRecyclerView.setLayoutManager(rollerLayoutManager);
 
-
         restaurantList = new ArrayList<Restaurant>();
-        // DUMMY DATA
-        restaurantList.add(new Restaurant("yep", new TreeSet<String>()));
-        restaurantList.add(new Restaurant("nope", new TreeSet<String>()));
-
         rollerAdapter = new RollerListAdapter(rollerList);
         rollerRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         rollerRecyclerView.setAdapter(rollerAdapter);
@@ -232,6 +229,27 @@ public class MainActivity extends MainActionBarActivity {
         favoriteAdapter = new FavoritesAdapter(initialDataset, restaurantData);
         favoriteRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         favoriteRecyclerView.setAdapter(favoriteAdapter);
+
+        favoritesTagFinder = findViewById(R.id.favorites_filter_text);
+        favoritesTagFinder.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                String tag = resultsTagFinder.getText().toString();
+                if(!tag.isEmpty()){
+                    filteredFavorites = new ArrayList<Restaurant>();
+                    for(Restaurant r: initialDataset){
+                        if(r.getTags().contains(tag))
+                            filteredFavorites.add(r);
+                    }
+                    favoriteAdapter = new FavoritesAdapter(filteredFavorites ,restaurantData);
+                } else
+                {
+                    favoriteAdapter = new FavoritesAdapter(initialDataset ,restaurantData);
+                }
+                favoriteRecyclerView.setAdapter(favoriteAdapter);
+                InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
+            return false; });
     }
 
     private void setUpResultsTab(Bundle savedInstanceState) {
@@ -253,18 +271,14 @@ public class MainActivity extends MainActionBarActivity {
                             }
                     }
                     resultsAdapter = new SearchBusinessAdapter(filteredResults);
-                    resultsRecyclerView.setAdapter(resultsAdapter);
                 } else
                 {
                     resultsAdapter = new SearchBusinessAdapter(allResults);
-                    resultsRecyclerView.setAdapter(resultsAdapter);
                 }
-
+                resultsRecyclerView.setAdapter(resultsAdapter);
                 InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
-            else
-                Log.i("which id is this", "x:" + actionId);
             return false; });
     }
 
