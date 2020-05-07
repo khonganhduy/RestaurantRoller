@@ -1,9 +1,11 @@
 package edu.sjsu.android.restaurantroller;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -166,6 +168,8 @@ public class MainActivity extends MainActionBarActivity {
         rollerRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         rollerRecyclerView.setAdapter(rollerAdapter);
 
+        setUpSwipeToDelete(rollerList, rollerRecyclerView, rollerAdapter);
+
         // Creates fragment to add a restaurant
         addRestaurantBtn = findViewById(R.id.add_restaurant_btn);
         addRestaurantBtn.setOnClickListener(view -> {
@@ -179,7 +183,7 @@ public class MainActivity extends MainActionBarActivity {
         rollRestaurantsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                rollRestaurants(view);
+                rollRestaurants(view, rollerList);
             }
         });
     }
@@ -421,12 +425,12 @@ public class MainActivity extends MainActionBarActivity {
         resultsRecyclerView.setAdapter(resultsAdapter);
     }
 
-    public void rollRestaurants(View view) {
-        Integer[] weights = new Integer[restaurantList.size()];
+    public void rollRestaurants(View view, ArrayList<Restaurant> dataset) {
+        Integer[] weights = new Integer[dataset.size()];
         for (int i = 0; i < weights.length; i++) {
-            weights[i] = restaurantList.get(i).getWeight();
+            weights[i] = dataset.get(i).getWeight();
         }
-        Restaurant rolledRestaurant = restaurantList.get(new RollerUtility().rollWeighted(weights));
+        Restaurant rolledRestaurant = dataset.get(new RollerUtility().rollWeighted(weights));
         Bundle bundle = new Bundle();
         bundle.putString(RESTAURANT_NAME_KEY, rolledRestaurant.getRestaurantName());
         bundle.putInt(RESTAURANT_WEIGHT_KEY, rolledRestaurant.getWeight());
@@ -545,5 +549,23 @@ public class MainActivity extends MainActionBarActivity {
             super.onPostExecute(restaurants);
             initialDataset = restaurants;
         }
+    }
+
+    public void setUpSwipeToDelete(ArrayList<Restaurant> dataset, RecyclerView recyclerView, RecyclerView.Adapter adapter){
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                dataset.get(viewHolder.getAdapterPosition()).setInRoller(false);
+                dataset.remove(viewHolder.getAdapterPosition());
+                adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+            }
+        };
+        ItemTouchHelper itemTouch = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouch.attachToRecyclerView(recyclerView);
     }
 }

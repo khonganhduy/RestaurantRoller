@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -85,16 +87,14 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
                     restaurantData.deleteAllByName(restaurant.getRestaurantName());
                 }
                 else if(restaurant.inRoller())
-                    MainActivity.rollerAdapter.removeFromDataset(restaurant);
-                else
+                    Toast.makeText(holder.view.getContext(), "Item is already in the roller.", Toast.LENGTH_SHORT).show();
+                else{
                     MainActivity.rollerAdapter.addToDataset(restaurant);
-                restaurant.setInRoller(!restaurant.inRoller());
-                notifyDataSetChanged();
+                    restaurant.setInRoller(true);
+                    Toast.makeText(holder.view.getContext(), "Item added to the roller.", Toast.LENGTH_SHORT).show();
+                }
             }}
         );
-
-        String check = MainActivity.deleteMode ? "Delete" : restaurant.inRoller() ? "Remove": "Add";
-        holder.addRemoveBtn.setText(check);
     }
 
     // Return the size of your dataset (invoked by the layout manager)

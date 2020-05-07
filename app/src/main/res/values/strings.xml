@@ -15,9 +15,9 @@
     <string name="help_favorite">Favorite</string>
     <string name="help_search_results">Search Results</string>
     <string name="help_search">Search</string>
-    <string name="body_roll">This Tab shows restaurants you added to a list where the application will randomly select one restaurant from the entire list.\n\nTo randomly select a restaurant click on the "ROLL RESTAURANTS" button in the top right hand corner.\n\nThe number on the right column indicates the likelihood that a restaurant will be chosen.\nThe higher the number the more likely the restaurant will be chosen.\n\nYou can increase or decrease this number by pressing on the UP and UP arrows above and below the number.</string>
-    <string name="body_favorite">This Tab shows restaurants that you add yourself instead of from Yelp.\nTo add your own restaurant, click "ADD RESTAURANT" button in the top right.</string>
-    <string name="body_search_results">Search Results</string>
+    <string name="body_roll">This tab shows restaurants you added to a list where the application will randomly select one restaurant from the entire list.\n\nTo randomly select a restaurant click on the "ROLL RESTAURANTS" button in the top right hand corner.\n\nThe number on the right column indicates the likelihood that a restaurant will be chosen.\nThe higher the number the more likely the restaurant will be chosen.\n\nYou can increase or decrease this number by pressing on the UP and UP arrows above and below the number.</string>
+    <string name="body_favorite">This tab shows restaurants that you add yourself instead of from Yelp.\nTo add your own restaurant, click the "ADD RESTAURANT" button in the top right.\n\nFrom here you can give a restaurant name and custom tags. When you press "CONFIRM", the restaurant is added to your favorites list.\n\nTo delete a restaurant press the "DELETE MODE" </string>
+    <string name="body_search_results">This tab shows the search results of the SEARCH tab.\nHere you can filter search results with a tag to narrow down the list of restaurants.\n\nClicking on the </string>
     <string name="body_search">Search</string>
     <string name="add_restaurant_fragment_title">Add Restaurant</string>
     <string name="roll_restaurant_fragment_title">Roller Selected</string>

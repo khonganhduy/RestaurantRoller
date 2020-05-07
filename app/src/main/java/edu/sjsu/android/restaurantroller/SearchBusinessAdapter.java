@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -101,17 +102,13 @@ public class SearchBusinessAdapter extends RecyclerView.Adapter<SearchBusinessAd
 
         holder.addRemoveBtn.setOnClickListener(view -> {
                 if(r.inRoller())
-                    MainActivity.rollerAdapter.removeFromDataset(r);
-                else
+                    Toast.makeText(holder.view.getContext(), "Item is already in the roller.", Toast.LENGTH_SHORT).show();
+                else{
                     MainActivity.rollerAdapter.addToDataset(r);
-                r.setInRoller(!r.inRoller());
-                Log.i("checking", MainActivity.rollerList.toString());
-                notifyDataSetChanged();
+                    r.setInRoller(true);
+                    Toast.makeText(holder.view.getContext(), "Item added to roller.", Toast.LENGTH_SHORT).show();
+                }
         });
-
-        String check = r.inRoller() ? "Remove": "Add";
-        holder.addRemoveBtn.setText(check);
-
     }
 
     // Return the size of your dataset (invoked by the layout manager)
