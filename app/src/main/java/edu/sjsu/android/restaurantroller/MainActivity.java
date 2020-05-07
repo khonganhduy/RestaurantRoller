@@ -89,7 +89,7 @@ public class MainActivity extends MainActionBarActivity {
     protected static boolean deleteMode = false;
     private ArrayList<Restaurant> filteredFavorites;
     // DB load
-    private static ArrayList<Restaurant> initialDataset;
+    private static ArrayList<Restaurant> initialDataset = new ArrayList<>();
 
     // Search Results Tab variables
     private RecyclerView resultsRecyclerView;
@@ -203,7 +203,6 @@ public class MainActivity extends MainActionBarActivity {
         });
 
         setInitialDatasetForAdapter();
-        initialDataset = new ArrayList<>();
         favoriteAdapter = new FavoritesAdapter(initialDataset, restaurantData);
         favoriteRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         favoriteRecyclerView.setAdapter(favoriteAdapter);
