@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -79,12 +80,13 @@ public class MainActivity extends MainActionBarActivity {
 
     // Favorites Tab variables
     private RecyclerView favoriteRecyclerView;
-    private RecyclerView.Adapter favoriteAdapter;
+    private FavoritesAdapter favoriteAdapter;
     private RecyclerView.LayoutManager favoriteLayoutManager;
     private Button addFavoriteRestaurantBtn, deleteModeBtn;
+    private static ArrayList<Restaurant> initialDataset;
 
     // Search Results Tab variables
-    private RecyclerView  resultsRecyclerView;
+    private RecyclerView resultsRecyclerView;
     private RecyclerView.Adapter resultsAdapter;
     private RecyclerView.LayoutManager resultsLayoutManager;
     private EditText resultsTagFinder;
@@ -100,14 +102,14 @@ public class MainActivity extends MainActionBarActivity {
     private Button searchButton;
     private Spinner minSpinner, maxSpinner;
 
-    private Handler handler = new Handler(Looper.getMainLooper()){
+    private Handler handler = new Handler(Looper.getMainLooper()) {
 
         @Override
-        public void handleMessage(Message inputMessage){
+        public void handleMessage(Message inputMessage) {
 
-            switch(inputMessage.what){
+            switch (inputMessage.what) {
                 case QUERY_FINISHED:
-                    onQueryFinish((Response<SearchResponse>)inputMessage.obj);
+                    onQueryFinish((Response<SearchResponse>) inputMessage.obj);
                     break;
                 case QUERY_FAILED:
                     Log.i("Timeout", "Connection Timed Out");
@@ -135,7 +137,7 @@ public class MainActivity extends MainActionBarActivity {
         setUpSearchTab(savedInstanceState);
     }
 
-    private void setupTabs(Bundle savedInstanceState){
+    private void setupTabs(Bundle savedInstanceState) {
         // Main Tab Setup Here
         tabs = (TabHost) findViewById(R.id.tabhost);
         tabs.setup();
@@ -183,25 +185,17 @@ public class MainActivity extends MainActionBarActivity {
         });
     }
 
-    private void setUpFavoritesTab(Bundle savedInstanceState){
+    private void setUpFavoritesTab(Bundle savedInstanceState) {
         favoriteRecyclerView = findViewById(R.id.favorites_recycler_view);
         favoriteLayoutManager = new LinearLayoutManager(this);
         favoriteRecyclerView.setLayoutManager(favoriteLayoutManager);
         addFavoriteRestaurantBtn = findViewById(R.id.add_restaurant_btn);
-        addFavoriteRestaurantBtn.setOnClickListener(new View.OnClickListener(){
+        addFavoriteRestaurantBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 AddRestaurantFragment dialogFragment = new AddRestaurantFragment();
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 dialogFragment.show(activity.getSupportFragmentManager(), "editText");
-                // TODO pull data from fragment to create a personal restaurant object
-
-                //To insert into db, will require String restaurantName and Iterable tags
-                /* WILL MODIFY WHEN DATA RETRIEVAL IMPLEMENTED
-                for(String tag: tags){
-                    restaurantData.insert(new RestaurantEntity(restaurantName, tag);
-                }
-                 */
             }
         });
         deleteModeBtn = findViewById(R.id.delete_mode_btn);
@@ -215,10 +209,13 @@ public class MainActivity extends MainActionBarActivity {
                  */
             }
         });
+        setInitialDatasetForAdapter();
+        favoriteAdapter = new FavoritesAdapter(initialDataset);
         favoriteRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
+        favoriteRecyclerView.setAdapter(favoriteAdapter);
     }
 
-    private void setUpResultsTab(Bundle savedInstanceState){
+    private void setUpResultsTab(Bundle savedInstanceState) {
         resultsRecyclerView = findViewById(R.id.search_result_recycler_view);
         resultsLayoutManager = new LinearLayoutManager(this);
         resultsRecyclerView.setLayoutManager(resultsLayoutManager);
@@ -229,39 +226,44 @@ public class MainActivity extends MainActionBarActivity {
             if (actionId == EditorInfo.IME_ACTION_GO) {
                 Log.i("test", "search called");
                 String tag = resultsTagFinder.getText().toString();
-                if(tag.isEmpty())
+                if (tag.isEmpty())
 
-                filteredResults = new ArrayList<Business>();
-                for(Business bis: allResults){
-                    for(Category c:bis.getCategories())
-                        if(c.getAlias().matches(tag.toLowerCase())){
+                    filteredResults = new ArrayList<Business>();
+                for (Business bis : allResults) {
+                    for (Category c : bis.getCategories())
+                        if (c.getAlias().matches(tag.toLowerCase())) {
                             filteredResults.add(bis);
                         }
                 }
                 resultsAdapter = new SearchBusinessAdapter(filteredResults);
                 resultsRecyclerView.setAdapter(resultsAdapter);
-                InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
-            return false; });
+            return false;
+        });
     }
 
-    private void setUpSearchTab(Bundle savedInstanceState){
+    private void setUpSearchTab(Bundle savedInstanceState) {
         // Search Tab Setup
         searchTab = findViewById(R.id.search_tab);
         searchTab.setOnFocusChangeListener((view, b) -> {
-            if(b){
-                InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0); }});
+            if (b) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        });
 
         searchTermText = findViewById(R.id.searchTerm);
         searchTermText.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                searchTab.requestFocus(); }
-            return false; });
+                searchTab.requestFocus();
+            }
+            return false;
+        });
 
         searchRadiusText = (EditText) findViewById(R.id.radiusValue);
-        searchRadiusText.setFilters(new InputFilter[]{new InputFilterMinMax(0,25), new InputFilter.LengthFilter(4)});
+        searchRadiusText.setFilters(new InputFilter[]{new InputFilterMinMax(0, 25), new InputFilter.LengthFilter(4)});
         searchRadiusText.setOnFocusChangeListener((view, b) -> searchRadiusText.setCursorVisible(b));
 
         ratingSeekBar = (ThumbTextSeekBar) findViewById(R.id.ratingBar);
@@ -269,37 +271,50 @@ public class MainActivity extends MainActionBarActivity {
         ratingSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-                ratingSeekBar.setThumbText(String.format( "%.1f", (progress + 2)/2.0));
+                ratingSeekBar.setThumbText(String.format("%.1f", (progress + 2) / 2.0));
             }
+
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}});
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
 
         minSpinner = findViewById(R.id.priceMin);
         minSpinner.setSelection(0);
         minSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
-                if(maxSpinner.getSelectedItemPosition() < pos)
-                    maxSpinner.setSelection(pos); }
+                if (maxSpinner.getSelectedItemPosition() < pos)
+                    maxSpinner.setSelection(pos);
+            }
+
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}});
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
         maxSpinner = findViewById(R.id.priceMax);
         maxSpinner.setSelection(3);
         maxSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
                 if (minSpinner.getSelectedItemPosition() > pos)
-                    minSpinner.setSelection(pos); }
+                    minSpinner.setSelection(pos);
+            }
+
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView){}});
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
 
         // Instantiates yelp API, do not remove!
         try {
             YelpHelper yelp = new YelpHelper(this);
         } catch (IOException e) {
-            Toast.makeText(this,"YelpHelper error",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "YelpHelper error", Toast.LENGTH_LONG).show();
         }
 
         searchButton = (Button) findViewById(R.id.searchButton);
@@ -307,23 +322,23 @@ public class MainActivity extends MainActionBarActivity {
             Location location = obtainLocation();
             YelpHelper.YelpQueryBuilder query = new YelpHelper.YelpQueryBuilder()
                     .setMinMaxPrice(minSpinner.getSelectedItemPosition() + 1, maxSpinner.getSelectedItemPosition() + 1)
-                    .setLatLong(location.getLatitude(),location.getLongitude());
+                    .setLatLong(location.getLatitude(), location.getLongitude());
             String term = searchTermText.getText().toString();
-            if(!term.isEmpty())
+            if (!term.isEmpty())
                 query.setSearchTerm(term);
             String rad = searchRadiusText.getText().toString();
-            if(!rad.isEmpty())
+            if (!rad.isEmpty())
                 query.setRadius(Double.parseDouble(rad));
             int rating = ratingSeekBar.getProgress();
-            if(rating > 0)
+            if (rating > 0)
                 query.setRatingMin(rating);
             try {
                 YelpHelper.YelpQuery runningQuery = query.executeQuery(handler);
             } catch (ExecutionException e) {
-                Toast.makeText(this,"Yelp querying error", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Yelp querying error", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             } catch (InterruptedException e) {
-                Toast.makeText(this,"Yelp querying error", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Yelp querying error", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
         });
@@ -333,40 +348,38 @@ public class MainActivity extends MainActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if(checkPermission()) {
+        if (checkPermission()) {
             if (locationFinder == null) {
                 locationFinder = new LocationFinder(MainActivity.this);
             }
             locationFinder.stopUsingGPS();
-        }
-        else{
+        } else {
             requestPermission();
         }
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
-        if(checkPermission()) {
+        if (checkPermission()) {
             if (locationFinder == null) {
                 locationFinder = new LocationFinder(MainActivity.this);
             } else {
                 locationFinder.reenableGPS();
             }
-        }
-        else{
+        } else {
             requestPermission();
         }
     }
 
-    protected void onQueryFinish(Response<SearchResponse> r){
+    protected void onQueryFinish(Response<SearchResponse> r) {
         Log.i("asyncro response", r.toString());
         tabs.setCurrentTab(2);
         ArrayList<Business> bis = r.body().getBusinesses();
         allResults = new ArrayList<>();
-        for(Business b: bis){
+        for (Business b : bis) {
             double rating = b.getRating();
-            if(rating >= (ratingSeekBar.getProgress() + 2)/ 2.0) {
+            if (rating >= (ratingSeekBar.getProgress() + 2) / 2.0) {
                 allResults.add(b);
             }
         }
@@ -375,16 +388,16 @@ public class MainActivity extends MainActionBarActivity {
         resultsRecyclerView.setAdapter(resultsAdapter);
     }
 
-    public void rollRestaurants(View view){
+    public void rollRestaurants(View view) {
         Integer[] weights = new Integer[restaurantList.size()];
-        for (int i = 0; i < weights.length; i++){
+        for (int i = 0; i < weights.length; i++) {
             weights[i] = restaurantList.get(i).getWeight();
         }
         Restaurant rolledRestaurant = restaurantList.get(new RollerUtility().rollWeighted(weights));
         Bundle bundle = new Bundle();
         bundle.putString(RESTAURANT_NAME_KEY, rolledRestaurant.getRestaurantName());
         bundle.putInt(RESTAURANT_WEIGHT_KEY, rolledRestaurant.getWeight());
-        if (rolledRestaurant instanceof YelpRestaurant){
+        if (rolledRestaurant instanceof YelpRestaurant) {
             YelpRestaurant yelpRestaurant = (YelpRestaurant) rolledRestaurant;
             bundle.putString(RESTAURANT_IMAGE_KEY, yelpRestaurant.getImageURL());
             bundle.putDouble(RESTAURANT_RATING_KEY, yelpRestaurant.getRating());
@@ -399,16 +412,16 @@ public class MainActivity extends MainActionBarActivity {
 
     // Website Launcher
     // Make sure in format of "http://example.com"
-    protected void launchWebsite(String url){
+    protected void launchWebsite(String url) {
         Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(webIntent);
     }
 
     // Method to obtain a location object which gives you the latitude and longitude
-    protected Location obtainLocation(){
+    protected Location obtainLocation() {
         Location myLocation = null;
-        if(checkPermission()) {
-            if(locationFinder == null) {
+        if (checkPermission()) {
+            if (locationFinder == null) {
                 locationFinder = new LocationFinder(MainActivity.this);
             }
             if (locationFinder.canGetLocation()) {
@@ -416,32 +429,29 @@ public class MainActivity extends MainActionBarActivity {
             } else {
                 locationFinder.showSettingsAlert();
             }
-        }
-        else{
+        } else {
             requestPermission();
         }
         return myLocation;
     }
 
     // Permission methods for the Location services
-    private boolean checkPermission(){
+    private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(
                 MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION);
-        if(result == PackageManager.PERMISSION_GRANTED){
+        if (result == PackageManager.PERMISSION_GRANTED) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
 
-    private void requestPermission(){
-        if(ActivityCompat.shouldShowRequestPermissionRationale(
-                MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)){
+    private void requestPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(
+                MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
             Toast.makeText(MainActivity.this, "Location services permission",
                     Toast.LENGTH_LONG).show();
-        }
-        else{
+        } else {
             ActivityCompat.requestPermissions(
                     MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSION_REQUEST_CODE);
@@ -449,20 +459,58 @@ public class MainActivity extends MainActionBarActivity {
     }
 
     // Logs permission check results -- Body is not necessary
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults){
-        switch(requestCode){
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
             case PERMISSION_REQUEST_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    Log.e("value","Permission Granted, Now you can use location services.");
-                }
-                else{
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.e("value", "Permission Granted, Now you can use location services.");
+                } else {
                     Log.e("value", "Permission Denied, You cannot use location services.");
                 }
                 break;
         }
     }
 
-    public void getPersonalRestaurantDataFromFragment(String personalRestaurantName, ArrayList<String> tags){
+    public void getPersonalRestaurantDataFromFragment(String personalRestaurantName, ArrayList<String> tags) {
+        TreeSet<String> tagSet = new TreeSet<>();
+        for (String tag : tags) {
+            restaurantData.insert(new RestaurantEntity(personalRestaurantName, tag));
+            tagSet.add(tag);
+        }
+        favoriteAdapter.addToDataset(new Restaurant(personalRestaurantName, tagSet));
+    }
 
+    private void setInitialDatasetForAdapter() {
+        MyAsyncTask task = new MyAsyncTask();
+        task.execute(restaurantData);
+    }
+
+    private class MyAsyncTask extends AsyncTask<RestaurantData, Void, ArrayList<Restaurant>> {
+        @Override
+        protected ArrayList<Restaurant> doInBackground(RestaurantData... restaurantData) {
+            RestaurantData rd = restaurantData[0];
+            initialDataset = new ArrayList<>();
+            ArrayList<RestaurantEntity> initialRawData = new ArrayList<>(rd.getAll());
+            TreeSet<String> restaurants = new TreeSet<>();
+            for (RestaurantEntity re : initialRawData) {
+                restaurants.add(re.getName());
+            }
+            TreeSet<String> tags;
+            for (String restaurant : restaurants) {
+                tags = new TreeSet<>();
+                ArrayList<RestaurantEntity> subsetData = new ArrayList<>(rd.getAllByName(restaurant));
+                for (RestaurantEntity re : subsetData) {
+                    tags.add(re.getTag());
+                }
+                initialDataset.add(new Restaurant(restaurant, tags));
+            }
+            return initialDataset;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Restaurant> restaurants) {
+            super.onPostExecute(restaurants);
+            initialDataset = restaurants;
+        }
     }
 }
