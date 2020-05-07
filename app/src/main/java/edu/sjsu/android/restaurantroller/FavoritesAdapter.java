@@ -58,6 +58,11 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
         notifyItemInserted(mDataset.size() - 1);
     }
 
+    public void setDataset(ArrayList<Restaurant> restaurants){
+        mDataset = restaurants;
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public FavoritesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
