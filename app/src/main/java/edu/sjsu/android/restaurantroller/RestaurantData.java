@@ -30,6 +30,10 @@ public class RestaurantData {
         });
     }
 
+    List<RestaurantEntity> getAll(){
+        return dao.getAllEntries();
+    }
+
     List<RestaurantEntity> getAllByName(final String name){
         return dao.getByName(name);
     }
