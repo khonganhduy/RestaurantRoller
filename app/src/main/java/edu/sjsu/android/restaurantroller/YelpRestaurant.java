@@ -1,5 +1,7 @@
 package edu.sjsu.android.restaurantroller;
 
+import androidx.annotation.Nullable;
+
 import com.yelp.fusion.client.models.Business;
 import com.yelp.fusion.client.models.Category;
 
@@ -60,5 +62,11 @@ public class YelpRestaurant extends Restaurant{
 
     public void setWeight(int weight){
         super.setWeight(weight);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        YelpRestaurant r = (YelpRestaurant) obj;
+        return super.equals(obj) && rating == r.rating && ratingCount == r.ratingCount && distance == r.distance && imageURL.equals(r.imageURL) && websiteURL.equals(r.websiteURL);
     }
 }
