@@ -1,7 +1,10 @@
 package edu.sjsu.android.restaurantroller;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SearchView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
