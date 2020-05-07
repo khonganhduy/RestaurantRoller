@@ -73,7 +73,7 @@ public class MainActivity extends MainActionBarActivity {
 
     // Roller Tab variables
     private RecyclerView rollerRecyclerView;
-    private RecyclerView.Adapter rollerAdapter;
+    protected static RollerListAdapter rollerAdapter = new RollerListAdapter(rollerList);
     private RecyclerView.LayoutManager rollerLayoutManager;
     private ArrayList<Restaurant> restaurantList;
     private Button addRestaurantBtn, rollRestaurantsBtn;
@@ -163,7 +163,6 @@ public class MainActivity extends MainActionBarActivity {
         rollerRecyclerView.setLayoutManager(rollerLayoutManager);
 
         restaurantList = new ArrayList<Restaurant>();
-        rollerAdapter = new RollerListAdapter(restaurantList);
         rollerRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         rollerRecyclerView.setAdapter(rollerAdapter);
 
