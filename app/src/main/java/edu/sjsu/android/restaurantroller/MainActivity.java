@@ -220,7 +220,7 @@ public class MainActivity extends MainActionBarActivity {
             }
         });
         setInitialDatasetForAdapter();
-        favoriteAdapter = new FavoritesAdapter(initialDataset);
+        favoriteAdapter = new FavoritesAdapter(initialDataset, restaurantData);
         favoriteRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         favoriteRecyclerView.setAdapter(favoriteAdapter);
     }
