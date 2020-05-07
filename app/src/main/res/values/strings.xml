@@ -16,7 +16,7 @@
     <string name="help_search_results">Search Results</string>
     <string name="help_search">Search</string>
     <string name="body_roll">This Tab shows restaurants you added to a list where the application will randomly select one restaurant from the entire list.\n\nTo randomly select a restaurant click on the "ROLL RESTAURANTS" button in the top right hand corner.\n\nThe number on the right column indicates the likelihood that a restaurant will be chosen.\nThe higher the number the more likely the restaurant will be chosen.\n\nYou can increase or decrease this number by pressing on the UP and UP arrows above and below the number.</string>
-    <string name="body_favorite">Favorite</string>
+    <string name="body_favorite">This Tab shows restaurants that you add yourself instead of from Yelp.\nTo add your own restaurant, click "ADD RESTAURANT" button in the top right.</string>
     <string name="body_search_results">Search Results</string>
     <string name="body_search">Search</string>
     <string name="add_restaurant_fragment_title">Add Restaurant</string>

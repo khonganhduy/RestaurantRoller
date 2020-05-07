@@ -160,11 +160,7 @@ public class MainActivity extends MainActionBarActivity {
         rollerLayoutManager = new LinearLayoutManager(this);
         rollerRecyclerView.setLayoutManager(rollerLayoutManager);
 
-        // DUMMY DATA
         restaurantList = new ArrayList<Restaurant>();
-        restaurantList.add(new YelpRestaurant("dddddddddddddddddddddddddddd", 1.0, 24, 40000, "test1IconUrl", "testurl", new TreeSet<String>()));
-        restaurantList.add(new YelpRestaurant("test 2", 4.0, 583, 29, "test2IconUrl", "testurl", new TreeSet<String>()));
-        restaurantList.add(new Restaurant("personal", new TreeSet<String>()));
         rollerAdapter = new RollerListAdapter(restaurantList);
         rollerRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         rollerRecyclerView.setAdapter(rollerAdapter);
@@ -215,6 +211,7 @@ public class MainActivity extends MainActionBarActivity {
                 deleteMode = !deleteMode;
                 String btnText = deleteMode ? "Delete Mode Off" : "Delete Mode";
                 deleteModeBtn.setText(btnText);
+
                 // TODO implement removal functionality of restaurant
 
                 /* WILL MODIFY WHEN DATA SELECTION IMPLEMENTED
@@ -223,7 +220,7 @@ public class MainActivity extends MainActionBarActivity {
             }
         });
         setInitialDatasetForAdapter();
-        favoriteAdapter = new FavoritesAdapter(initialDataset);
+        favoriteAdapter = new FavoritesAdapter(initialDataset, restaurantData);
         favoriteRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         favoriteRecyclerView.setAdapter(favoriteAdapter);
     }
