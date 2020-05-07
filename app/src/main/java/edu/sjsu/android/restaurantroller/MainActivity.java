@@ -500,7 +500,7 @@ public class MainActivity extends MainActionBarActivity {
         task.execute(restaurantData);
     }
 
-    private class MyAsyncTask extends AsyncTask<RestaurantData, Void, ArrayList<Restaurant>> {
+    private static class MyAsyncTask extends AsyncTask<RestaurantData, Void, ArrayList<Restaurant>> {
         @Override
         protected ArrayList<Restaurant> doInBackground(RestaurantData... restaurantData) {
             RestaurantData rd = restaurantData[0];
