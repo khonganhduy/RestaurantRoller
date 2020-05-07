@@ -520,7 +520,9 @@ public class MainActivity extends MainActionBarActivity {
                 tags = new TreeSet<>();
                 ArrayList<RestaurantEntity> subsetData = new ArrayList<>(rd.getAllByName(restaurant));
                 for (RestaurantEntity re : subsetData) {
-                    tags.add(re.getTag());
+                    if(re.getTag() != null) {
+                        tags.add(re.getTag());
+                    }
                 }
                 initialDataset.add(new Restaurant(restaurant, tags));
             }
