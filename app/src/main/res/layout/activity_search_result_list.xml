@@ -31,7 +31,7 @@
             android:layout_marginHorizontal="10dp"
             android:inputType="text"
             android:layout_toRightOf="@id/search_icon"
-            android:hint="Enter Tags"
+            android:hint="Enter Tag"
             android:textSize="12dp"
             />
 
