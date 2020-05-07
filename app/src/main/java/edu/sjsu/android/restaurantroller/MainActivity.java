@@ -58,6 +58,7 @@ public class MainActivity extends MainActionBarActivity {
     public static final String RESTAURANT_RATING_KEY = "restaurant_rating";
     public static final String RESTAURANT_RATING_COUNT_KEY = "restaurant_rating_count";
     public static final String RESTAURANT_DISTANCE_KEY = "restaurant_distance";
+    public static final String RESTAURANT_URL_KEY = "restaurant_url";
 
     protected static ArrayList<Restaurant> rollerList = new ArrayList<>();
     // Buttons
@@ -420,6 +421,7 @@ public class MainActivity extends MainActionBarActivity {
             bundle.putDouble(RESTAURANT_RATING_KEY, yelpRestaurant.getRating());
             bundle.putInt(RESTAURANT_RATING_COUNT_KEY, yelpRestaurant.getRatingCount());
             bundle.putDouble(RESTAURANT_DISTANCE_KEY, yelpRestaurant.getDistance());
+            bundle.putString(RESTAURANT_URL_KEY, yelpRestaurant.getWebsiteURL());
         }
         RollResultFragment dialogFragment = new RollResultFragment();
         dialogFragment.setArguments(bundle);

@@ -23,7 +23,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        >
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -36,7 +38,9 @@
                 android:layout_height="160px"
                 android:layout_marginTop="3dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/questionmark" />
+                android:src="@drawable/questionmark"
+                android:visibility="invisible"
+                />
 
             <TextView
                 android:id="@+id/selected_first_line"
@@ -61,7 +65,9 @@
                 android:layout_marginTop="3dp"
                 android:layout_toRightOf="@+id/selected_shop_icon"
                 android:scaleType="fitCenter"
-                android:src="@drawable/stars00" />
+                android:src="@drawable/stars00"
+                android:visibility="invisible"
+                />
 
             <TextView
                 android:id="@+id/selected_rating_text"
@@ -74,7 +80,9 @@
                 android:gravity="center_vertical"
                 android:paddingBottom="3pt"
                 android:text="0 Ratings"
-                android:textSize="12dp" />
+                android:textSize="12dp"
+                android:visibility="invisible"
+                />
 
             <ImageButton
                 android:id="@+id/selected_yelp_button"
@@ -86,7 +94,9 @@
                 android:layout_toRightOf="@id/selected_rating_icon"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
-                android:src="@drawable/yelp_logo" />
+                android:src="@drawable/yelp_logo"
+                android:visibility="invisible"
+                />
 
         </RelativeLayout>
 
