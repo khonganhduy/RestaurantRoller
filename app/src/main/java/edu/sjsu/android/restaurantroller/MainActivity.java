@@ -82,7 +82,7 @@ public class MainActivity extends MainActionBarActivity {
 
     // Favorites Tab variables
     private RecyclerView favoriteRecyclerView;
-    private FavoritesAdapter favoriteAdapter;
+    private static FavoritesAdapter favoriteAdapter;
     private RecyclerView.LayoutManager favoriteLayoutManager;
     private Button addFavoriteRestaurantBtn, deleteModeBtn;
     private EditText favoritesTagFinder;
@@ -199,14 +199,6 @@ public class MainActivity extends MainActionBarActivity {
                 AddRestaurantFragment dialogFragment = new AddRestaurantFragment();
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 dialogFragment.show(activity.getSupportFragmentManager(), "editText");
-                // TODO pull data from fragment to create a personal restaurant object
-
-                //To insert into db, will require String restaurantName and Iterable tags
-                /* WILL MODIFY WHEN DATA RETRIEVAL IMPLEMENTED
-                for(String tag: tags){
-                    restaurantData.insert(new RestaurantEntity(restaurantName, tag);
-                }
-                 */
             }
         });
         deleteModeBtn = findViewById(R.id.delete_mode_btn);
@@ -216,15 +208,10 @@ public class MainActivity extends MainActionBarActivity {
                 deleteMode = !deleteMode;
                 String btnText = deleteMode ? "Delete Mode Off" : "Delete Mode";
                 deleteModeBtn.setText(btnText);
-
-                // TODO implement removal functionality of restaurant
-
-                /* WILL MODIFY WHEN DATA SELECTION IMPLEMENTED
-                restaurantData.deleteAllByName(restaurantName);
-                 */
             }
         });
         setInitialDatasetForAdapter();
+        initialDataset = new ArrayList<>();
         favoriteAdapter = new FavoritesAdapter(initialDataset, restaurantData);
         favoriteRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         favoriteRecyclerView.setAdapter(favoriteAdapter);
@@ -510,6 +497,9 @@ public class MainActivity extends MainActionBarActivity {
 
     public void getPersonalRestaurantDataFromFragment(String personalRestaurantName, ArrayList<String> tags) {
         TreeSet<String> tagSet = new TreeSet<>();
+        if(tags.size() == 0){
+            restaurantData.insert(new RestaurantEntity(personalRestaurantName, null));
+        }
         for (String tag : tags) {
             restaurantData.insert(new RestaurantEntity(personalRestaurantName, tag));
             tagSet.add(tag);
@@ -548,6 +538,7 @@ public class MainActivity extends MainActionBarActivity {
         protected void onPostExecute(ArrayList<Restaurant> restaurants) {
             super.onPostExecute(restaurants);
             initialDataset = restaurants;
+            favoriteAdapter.setDataset(initialDataset);
         }
     }
 
