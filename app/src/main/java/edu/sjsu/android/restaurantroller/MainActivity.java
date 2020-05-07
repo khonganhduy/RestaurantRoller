@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,6 +22,8 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.inputmethod.EditorInfo;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -28,6 +31,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TabHost;
@@ -222,12 +226,11 @@ public class MainActivity extends MainActionBarActivity {
         resultsRecyclerView = findViewById(R.id.search_result_recycler_view);
         resultsLayoutManager = new LinearLayoutManager(this);
         resultsRecyclerView.setLayoutManager(resultsLayoutManager);
-        resultsTagFinder = findViewById(R.id.search_filter_text);
+
+        resultsTagFinder = findViewById(R.id.search_result_filter_text);
 
         resultsTagFinder.setOnEditorActionListener((v, actionId, event) -> {
-            Log.i("which id is this", "x:" + actionId);
-            if (actionId == EditorInfo.IME_ACTION_GO) {
-                Log.i("test", "search called");
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
                 String tag = resultsTagFinder.getText().toString();
                 if(tag.isEmpty())
 
