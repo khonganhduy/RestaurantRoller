@@ -13,7 +13,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.DataSetObserver;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -76,7 +75,7 @@ public class MainActivity extends MainActionBarActivity {
 
     // Roller Tab variables
     private RecyclerView rollerRecyclerView;
-    protected static RecyclerView.Adapter rollerAdapter;
+    protected static RollerListAdapter rollerAdapter = new RollerListAdapter(rollerList);
     private RecyclerView.LayoutManager rollerLayoutManager;
     private ArrayList<Restaurant> restaurantList;
     private Button addRestaurantBtn, rollRestaurantsBtn;
@@ -166,7 +165,6 @@ public class MainActivity extends MainActionBarActivity {
         rollerRecyclerView.setLayoutManager(rollerLayoutManager);
 
         restaurantList = new ArrayList<Restaurant>();
-        rollerAdapter = new RollerListAdapter(rollerList);
         rollerRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         rollerRecyclerView.setAdapter(rollerAdapter);
 

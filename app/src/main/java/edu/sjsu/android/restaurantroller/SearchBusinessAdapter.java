@@ -102,21 +102,14 @@ public class SearchBusinessAdapter extends RecyclerView.Adapter<SearchBusinessAd
 
         holder.addRemoveBtn.setOnClickListener(view -> {
                 if(r.inRoller())
-                    //MainActivity.rollerList.remove(r);
                     Toast.makeText(holder.view.getContext(), "Item is already in the roller.", Toast.LENGTH_SHORT).show();
-                else {
-                    MainActivity.rollerList.add(r);
+                else{
+                    MainActivity.rollerAdapter.addToDataset(r);
                     r.setInRoller(true);
                     Toast.makeText(holder.view.getContext(), "Item added to roller.", Toast.LENGTH_SHORT).show();
                 }
-                //r.setInRoller(!r.inRoller());
-                Log.i("checking", MainActivity.rollerList.toString());
                 notifyDataSetChanged();
         });
-
-        //String check = r.inRoller() ? "Remove": "Add";
-        //holder.addRemoveBtn.setText(check);
-
     }
 
     // Return the size of your dataset (invoked by the layout manager)
