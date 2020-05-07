@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
@@ -26,12 +27,7 @@ public class AddRestaurantFragment extends DialogFragment {
     private static final String[] COUNTRIES = new String[] {
             "Belgium", "France", "Italy", "Germany", "Spain"
     };
-    private Button confirmBtn;
-    private Button cancelBtn;
-    private Button addTagBtn;
     private AutoCompleteTextView tagSearch;
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
     private AddTagsAdapter mAdapter;
     private ArrayList<String> myDataSet;
 
@@ -62,9 +58,10 @@ public class AddRestaurantFragment extends DialogFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
-        confirmBtn = (Button) view.findViewById(R.id.add_restaurant_confirm_btn);
-        cancelBtn = (Button) view.findViewById(R.id.add_restaurant_cancel_btn);
-        addTagBtn = (Button) view.findViewById(R.id.add_tag_btn);
+        Button confirmBtn = (Button) view.findViewById(R.id.add_restaurant_confirm_btn);
+        Button cancelBtn = (Button) view.findViewById(R.id.add_restaurant_cancel_btn);
+        Button addTagBtn = (Button) view.findViewById(R.id.add_tag_btn);
+        EditText addRestaurantName = (EditText) view.findViewById(R.id.add_restaurant_name);
         tagSearch = (AutoCompleteTextView) view.findViewById(R.id.tag_search);
         ArrayList<InputFilter> curInputFilters = new ArrayList<InputFilter>(Arrays.asList(tagSearch.getFilters()));
         curInputFilters.add(0, new AlphaNumericInputFilter());
@@ -72,19 +69,23 @@ public class AddRestaurantFragment extends DialogFragment {
         tagSearch.setFilters(newInputFilters);
 
         // Temporary Dataset
-        myDataSet = new ArrayList<String>(Arrays.asList("jojo", "dab", "test", "test2", "test3", "test4"));
+        //myDataSet = new ArrayList<String>(Arrays.asList("jojo", "dab", "test", "test2", "test3", "test4"));
+
+        //Actual Dataset
+        myDataSet = new ArrayList<String>();
+
         // Temporary autofill adapter
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(view.getContext(),
                 android.R.layout.simple_dropdown_item_1line, COUNTRIES);
         tagSearch.setAdapter(adapter);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.add_tags_recycler);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.add_tags_recycler);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        layoutManager = new LinearLayoutManager(view.getContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
         // specify an adapter (see also next example
         mAdapter = new AddTagsAdapter(myDataSet);
@@ -94,7 +95,8 @@ public class AddRestaurantFragment extends DialogFragment {
         confirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                ((MainActivity) getActivity()).getPersonalRestaurantDataFromFragment(addRestaurantName.getText().toString(), myDataSet);
+                dismiss();
             }
         });
 
