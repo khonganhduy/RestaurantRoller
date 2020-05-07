@@ -17,7 +17,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.inputmethod.EditorInfo;
 import android.view.View;
@@ -83,8 +85,10 @@ public class MainActivity extends MainActionBarActivity {
     private RecyclerView  resultsRecyclerView;
     private RecyclerView.Adapter resultsAdapter;
     private RecyclerView.LayoutManager resultsLayoutManager;
+    private EditText resultsTagFinder;
+    private ArrayList<Business> allResults = new ArrayList<>(), filteredResults;
 
-    // Search Results Tab variables
+    // DB?
     private RestaurantData restaurantData;
 
     // Search Tab variables
@@ -189,6 +193,28 @@ public class MainActivity extends MainActionBarActivity {
         resultsRecyclerView = findViewById(R.id.search_result_recycler_view);
         resultsLayoutManager = new LinearLayoutManager(this);
         resultsRecyclerView.setLayoutManager(resultsLayoutManager);
+        resultsTagFinder = findViewById(R.id.search_filter_text);
+
+        resultsTagFinder.setOnEditorActionListener((v, actionId, event) -> {
+            Log.i("which id is this", "x:" + actionId);
+            if (actionId == EditorInfo.IME_ACTION_GO) {
+                Log.i("test", "search called");
+                String tag = resultsTagFinder.getText().toString();
+                if(tag.isEmpty())
+
+                filteredResults = new ArrayList<Business>();
+                for(Business bis: allResults){
+                    for(Category c:bis.getCategories())
+                        if(c.getAlias().matches(tag.toLowerCase())){
+                            filteredResults.add(bis);
+                        }
+                }
+                resultsAdapter = new SearchBusinessAdapter(filteredResults);
+                resultsRecyclerView.setAdapter(resultsAdapter);
+                InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
+            return false; });
     }
 
     private void setUpSearchTab(Bundle savedInstanceState){
@@ -308,14 +334,14 @@ public class MainActivity extends MainActionBarActivity {
         Log.i("asyncro response", r.toString());
         tabs.setCurrentTab(2);
         ArrayList<Business> bis = r.body().getBusinesses();
-        ArrayList<Business> filteredList = new ArrayList<>();
+        allResults = new ArrayList<>();
         for(Business b: bis){
             double rating = b.getRating();
             if(rating >= (ratingSeekBar.getProgress() + 2)/ 2.0) {
-                filteredList.add(b);
+                allResults.add(b);
             }
         }
-        resultsAdapter = new SearchBusinessAdapter(filteredList);
+        resultsAdapter = new SearchBusinessAdapter(allResults);
         resultsRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         resultsRecyclerView.setAdapter(resultsAdapter);
     }

@@ -2,24 +2,18 @@ package edu.sjsu.android.restaurantroller;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
+
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
-import com.yelp.fusion.client.models.Category;
-
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.TreeSet;
+
 
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.FavoritesViewHolder> {
 
