@@ -547,7 +547,6 @@ public class MainActivity extends MainActionBarActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                dataset.get(viewHolder.getAdapterPosition()).setInRoller(false);
                 dataset.remove(viewHolder.getAdapterPosition());
                 adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
             }

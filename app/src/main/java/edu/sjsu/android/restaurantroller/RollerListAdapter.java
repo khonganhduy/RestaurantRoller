@@ -149,4 +149,8 @@ public class RollerListAdapter extends RecyclerView.Adapter<RollerListAdapter.Ro
         return ret;
     }
 
+    public boolean contains(Restaurant r){
+        return mDataset.contains(r);
+    }
+
 }
