@@ -18,6 +18,14 @@ public class YelpRestaurant extends Restaurant{
         this.websiteURL = websiteURL;
     }
 
+    public YelpRestaurant(Business b, TreeSet<String> tagSet){
+        super(b, tagSet);
+        rating = b.getRating();
+        ratingCount = b.getReviewCount();
+        distance = b.getDistance();
+        imageURL = b.getImageUrl().replaceAll("o\\.jpg", "ms.jpg");
+        websiteURL = b.getUrl();
+    }
     public String getRestaurantName(){
         return super.getRestaurantName();
     }
