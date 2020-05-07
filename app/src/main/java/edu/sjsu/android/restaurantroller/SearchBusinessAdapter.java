@@ -23,7 +23,7 @@ import java.util.TreeSet;
 
 public class SearchBusinessAdapter extends RecyclerView.Adapter<SearchBusinessAdapter.SearchBusinessViewHolder> {
 
-    private ArrayList<Restaurant> mDataset;
+    private ArrayList<YelpRestaurant> mDataset;
 
 
     public static class SearchBusinessViewHolder extends RecyclerView.ViewHolder {
@@ -53,13 +53,13 @@ public class SearchBusinessAdapter extends RecyclerView.Adapter<SearchBusinessAd
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public SearchBusinessAdapter(ArrayList<Business> myDataset) {
-        ArrayList<Restaurant> dataSet = new ArrayList<>();
+        ArrayList<YelpRestaurant> dataSet = new ArrayList<>();
         for (Business b: myDataset)
         {
             TreeSet<String> tags = new TreeSet();
             for(Category c: b.getCategories())
                 tags.add(c.getAlias());
-            Restaurant r = new Restaurant(b, tags);
+            YelpRestaurant r = new YelpRestaurant(b, tags);
             dataSet.add(r);
         }
         mDataset = dataSet;
@@ -85,20 +85,19 @@ public class SearchBusinessAdapter extends RecyclerView.Adapter<SearchBusinessAd
         holder.yelpLaunch.setVisibility(View.VISIBLE);
         holder.restaurantIcon.setVisibility(View.VISIBLE);
 
-        Restaurant r = mDataset.get(position);
-        Business b = r.getBusinessSource();
+        YelpRestaurant r = mDataset.get(position);
 
-        holder.nameTextView.setText(b.getName());
+        holder.nameTextView.setText(r.getRestaurantName());
 
-        View.OnClickListener launchWeb = view -> launchWebsite(b.getUrl(), holder.view);
-        Picasso.get().load(b.getImageUrl().replaceAll("o\\.jpg", "ms.jpg")).into(holder.restaurantIcon);
+        View.OnClickListener launchWeb = view -> launchWebsite(r.getWebsiteURL(), holder.view);
+        Picasso.get().load(r.getImageURL()).into(holder.restaurantIcon);
         holder.restaurantIcon.setOnClickListener(launchWeb);
         holder.yelpLaunch.setOnClickListener(launchWeb);
 
-        holder.ratingCountView.setText(b.getReviewCount() + " reviews");
-        String rating = "stars" + Double.toString(b.getRating()).replaceAll("\\.", "");
+        holder.ratingCountView.setText(r.getRatingCount() + " reviews");
+        String rating = "stars" + Double.toString(r.getRating()).replaceAll("\\.", "");
         holder.ratingIcon.setImageResource(holder.view.getResources().getIdentifier(rating, "drawable", "edu.sjsu.android.restaurantroller"));
-        holder.distanceView.setText(String.format("%.2f", YelpHelper.metersToMiles(b.getDistance())) + " mi");
+        holder.distanceView.setText(String.format("%.2f", YelpHelper.metersToMiles(r.getDistance())) + " mi");
 
         holder.addRemoveBtn.setOnClickListener(view -> {
                 if(r.inRoller())
