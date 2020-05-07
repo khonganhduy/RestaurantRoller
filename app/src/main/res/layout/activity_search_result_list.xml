@@ -33,7 +33,6 @@
             android:inputType="text"
             android:hint="Enter Tags"
             android:textSize="12dp"
-            android:inputType="text"
             />
 <!--
         <Button
