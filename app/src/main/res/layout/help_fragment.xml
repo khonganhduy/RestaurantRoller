@@ -11,24 +11,33 @@
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:orientation="vertical"
-        android:layout_weight="9"
+        android:layout_weight="13"
+        android:padding="15dp"
         >
 
-        <ScrollView
+
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:text="@string/help_title"
+            android:textSize="10pt"
+            android:paddingBottom="5dp"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="15dp"
-                android:text="Help" />
-
-        </ScrollView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/help_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
 
     </LinearLayout>
 
-    <RelativeLayout
+
+        <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:orientation="vertical"
