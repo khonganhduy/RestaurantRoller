@@ -211,6 +211,8 @@ public class MainActivity extends MainActionBarActivity {
             @Override
             public void onClick(View view) {
                 deleteMode = !deleteMode;
+                String btnText = deleteMode ? "Delete Mode Off" : "Delete Mode";
+                deleteModeBtn.setText(btnText);
                 // TODO implement removal functionality of restaurant
 
                 /* WILL MODIFY WHEN DATA SELECTION IMPLEMENTED
