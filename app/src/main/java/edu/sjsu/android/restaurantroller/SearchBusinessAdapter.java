@@ -104,10 +104,12 @@ public class SearchBusinessAdapter extends RecyclerView.Adapter<SearchBusinessAd
                 if(r.inRoller())
                     //MainActivity.rollerList.remove(r);
                     Toast.makeText(holder.view.getContext(), "Item is already in the roller.", Toast.LENGTH_SHORT).show();
-                else
+                else {
                     MainActivity.rollerList.add(r);
+                    r.setInRoller(true);
                     Toast.makeText(holder.view.getContext(), "Item added to roller.", Toast.LENGTH_SHORT).show();
-                r.setInRoller(!r.inRoller());
+                }
+                //r.setInRoller(!r.inRoller());
                 Log.i("checking", MainActivity.rollerList.toString());
                 notifyDataSetChanged();
         });

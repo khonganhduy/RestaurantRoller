@@ -50,7 +50,7 @@ public class RollResultFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 View rollBtn = (View) getActivity().findViewById(R.id.roll_btn);
-                ((MainActivity)getActivity()).rollRestaurants(rollBtn);
+                ((MainActivity)getActivity()).rollRestaurants(rollBtn, MainActivity.rollerList);
                 dismiss();
             }
         });

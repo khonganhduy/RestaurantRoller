@@ -13,6 +13,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.DataSetObserver;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -75,7 +76,7 @@ public class MainActivity extends MainActionBarActivity {
 
     // Roller Tab variables
     private RecyclerView rollerRecyclerView;
-    private RecyclerView.Adapter rollerAdapter;
+    protected static RecyclerView.Adapter rollerAdapter;
     private RecyclerView.LayoutManager rollerLayoutManager;
     private ArrayList<Restaurant> restaurantList;
     private Button addRestaurantBtn, rollRestaurantsBtn;
@@ -184,7 +185,7 @@ public class MainActivity extends MainActionBarActivity {
         rollRestaurantsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                rollRestaurants(view);
+                rollRestaurants(view, rollerList);
             }
         });
     }
@@ -426,12 +427,12 @@ public class MainActivity extends MainActionBarActivity {
         resultsRecyclerView.setAdapter(resultsAdapter);
     }
 
-    public void rollRestaurants(View view) {
-        Integer[] weights = new Integer[restaurantList.size()];
+    public void rollRestaurants(View view, ArrayList<Restaurant> dataset) {
+        Integer[] weights = new Integer[dataset.size()];
         for (int i = 0; i < weights.length; i++) {
-            weights[i] = restaurantList.get(i).getWeight();
+            weights[i] = dataset.get(i).getWeight();
         }
-        Restaurant rolledRestaurant = restaurantList.get(new RollerUtility().rollWeighted(weights));
+        Restaurant rolledRestaurant = dataset.get(new RollerUtility().rollWeighted(weights));
         Bundle bundle = new Bundle();
         bundle.putString(RESTAURANT_NAME_KEY, rolledRestaurant.getRestaurantName());
         bundle.putInt(RESTAURANT_WEIGHT_KEY, rolledRestaurant.getWeight());
@@ -561,6 +562,7 @@ public class MainActivity extends MainActionBarActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                dataset.get(viewHolder.getAdapterPosition()).setInRoller(false);
                 dataset.remove(viewHolder.getAdapterPosition());
                 adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
             }
