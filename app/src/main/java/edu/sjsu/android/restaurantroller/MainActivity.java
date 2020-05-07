@@ -38,6 +38,7 @@ import com.yelp.fusion.client.models.Category;
 import com.yelp.fusion.client.models.SearchResponse;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
@@ -461,5 +462,7 @@ public class MainActivity extends MainActionBarActivity {
         }
     }
 
+    public void getPersonalRestaurantDataFromFragment(String personalRestaurantName, ArrayList<String> tags){
 
+    }
 }
