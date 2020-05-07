@@ -108,7 +108,6 @@ public class SearchBusinessAdapter extends RecyclerView.Adapter<SearchBusinessAd
                     r.setInRoller(true);
                     Toast.makeText(holder.view.getContext(), "Item added to roller.", Toast.LENGTH_SHORT).show();
                 }
-                notifyDataSetChanged();
         });
     }
 
