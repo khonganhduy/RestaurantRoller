@@ -235,9 +235,7 @@ public class MainActivity extends MainActionBarActivity {
         resultsTagFinder.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
                 String tag = resultsTagFinder.getText().toString();
-                if (tag.isEmpty())
-
-                    filteredResults = new ArrayList<Business>();
+                filteredResults = new ArrayList<Business>();
                 for (Business bis : allResults) {
                     for (Category c : bis.getCategories())
                         if (c.getAlias().matches(tag.toLowerCase())) {
