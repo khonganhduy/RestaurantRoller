@@ -1,9 +1,11 @@
 package edu.sjsu.android.restaurantroller;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -160,10 +162,17 @@ public class MainActivity extends MainActionBarActivity {
         rollerLayoutManager = new LinearLayoutManager(this);
         rollerRecyclerView.setLayoutManager(rollerLayoutManager);
 
+
         restaurantList = new ArrayList<Restaurant>();
+        // DUMMY DATA
+        restaurantList.add(new Restaurant("yep", new TreeSet<String>()));
+        restaurantList.add(new Restaurant("nope", new TreeSet<String>()));
+
         rollerAdapter = new RollerListAdapter(restaurantList);
         rollerRecyclerView.addItemDecoration(new DividerItemDecoration(rollerRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         rollerRecyclerView.setAdapter(rollerAdapter);
+
+        setUpSwipeToDelete(restaurantList, rollerRecyclerView, rollerAdapter);
 
         // Creates fragment to add a restaurant
         addRestaurantBtn = findViewById(R.id.add_restaurant_btn);
@@ -527,5 +536,22 @@ public class MainActivity extends MainActionBarActivity {
             super.onPostExecute(restaurants);
             initialDataset = restaurants;
         }
+    }
+
+    public void setUpSwipeToDelete(ArrayList<Restaurant> dataset, RecyclerView recyclerView, RecyclerView.Adapter adapter){
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                dataset.remove(viewHolder.getAdapterPosition());
+                adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+            }
+        };
+        ItemTouchHelper itemTouch = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouch.attachToRecyclerView(recyclerView);
     }
 }
