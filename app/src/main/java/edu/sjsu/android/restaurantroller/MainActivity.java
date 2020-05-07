@@ -235,18 +235,23 @@ public class MainActivity extends MainActionBarActivity {
         resultsTagFinder.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
                 String tag = resultsTagFinder.getText().toString();
-                if (tag.isEmpty())
-
+                if(!tag.isEmpty()){
                     filteredResults = new ArrayList<Business>();
-                for (Business bis : allResults) {
-                    for (Category c : bis.getCategories())
-                        if (c.getAlias().matches(tag.toLowerCase())) {
-                            filteredResults.add(bis);
-                        }
+                    for(Business bis: allResults){
+                        for(Category c:bis.getCategories())
+                            if(c.getAlias().matches(tag.toLowerCase())){
+                                filteredResults.add(bis);
+                            }
+                    }
+                    resultsAdapter = new SearchBusinessAdapter(filteredResults);
+                    resultsRecyclerView.setAdapter(resultsAdapter);
+                } else
+                {
+                    resultsAdapter = new SearchBusinessAdapter(allResults);
+                    resultsRecyclerView.setAdapter(resultsAdapter);
                 }
-                resultsAdapter = new SearchBusinessAdapter(filteredResults);
-                resultsRecyclerView.setAdapter(resultsAdapter);
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                
+                InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
             else
