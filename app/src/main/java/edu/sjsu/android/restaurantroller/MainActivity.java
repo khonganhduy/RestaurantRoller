@@ -38,6 +38,7 @@ import com.yelp.fusion.client.models.Category;
 import com.yelp.fusion.client.models.SearchResponse;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
@@ -226,11 +227,11 @@ public class MainActivity extends MainActionBarActivity {
         resultsRecyclerView = findViewById(R.id.search_result_recycler_view);
         resultsLayoutManager = new LinearLayoutManager(this);
         resultsRecyclerView.setLayoutManager(resultsLayoutManager);
-        resultsTagFinder = findViewById(R.id.search_filter_text);
+
+        resultsTagFinder = findViewById(R.id.search_result_filter_text);
 
         resultsTagFinder.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                Log.i("test", "search called");
                 String tag = resultsTagFinder.getText().toString();
                 if(!tag.isEmpty()){
                     filteredResults = new ArrayList<Business>();
@@ -472,5 +473,7 @@ public class MainActivity extends MainActionBarActivity {
         }
     }
 
+    public void getPersonalRestaurantDataFromFragment(String personalRestaurantName, ArrayList<String> tags){
 
+    }
 }
