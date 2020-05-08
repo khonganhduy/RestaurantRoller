@@ -184,7 +184,9 @@ public class MainActivity extends MainActionBarActivity {
         rollRestaurantsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                rollRestaurants(view, rollerList);
+                if (rollerList.size() > 0) {
+                    rollRestaurants(view, rollerList);
+                }
             }
         });
     }
